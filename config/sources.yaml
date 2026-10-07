@@ -22,7 +22,8 @@ companies:
   - name: xAI
     country: US
     blog: https://x.ai
-    status: tbd
+    news: https://x.ai/news
+    status: ok
   - name: Meta
     country: US
     blog: https://ai.meta.com
@@ -94,8 +95,8 @@ companies:
     status: tbd
   - name: MiniMax
     country: CN
-    blog: https://www.minimaxi.com
-    status: tbd
+    blog: https://www.minimax.io
+    status: ok
   - name: 阶跃星辰
     country: CN
     blog: https://www.stepfun.com
@@ -171,6 +172,18 @@ people:
     org: NVIDIA
     role: CEO
     x_handle: TBD
+  - name: 唐杰
+    org: 智谱
+    role: 董事长/科学家
+    x_handle: TBD
+  - name: 周靖人
+    org: 阿里
+    role: 通义负责人
+    x_handle: TBD
+  - name: 朱文佳
+    org: 字节跳动
+    role: Seed 负责人
+    x_handle: TBD
 
 media:
   # 第三方科技媒体（传闻与转述只作线索，不作定论）
@@ -185,12 +198,39 @@ media:
     url: https://techcrunch.com
   - name: The Verge
     url: https://www.theverge.com
+  - name: 晚点 LatePost
+    url: https://www.latepost.com
+    status: tbd
+
+benchmarks:
+  # 模型榜单与评测（厂商自报成绩只作线索，以第三方实测为准）
+  - name: Artificial Analysis
+    url: https://artificialanalysis.ai
+    status: tbd
+  - name: LMArena
+    url: TBD
+    status: tbd
+
+newsletters:
+  # 行业 newsletter（聚合线索用）
+  - name: TLDR AI
+    url: https://tldr.tech
+    status: tbd
+  - name: The Batch
+    url: https://www.deeplearning.ai/the-batch/
+    status: tbd
 
 tool_sources:
   - name: GitHub Trending
     url: https://github.com/trending
   - name: Hugging Face Trending
     url: https://huggingface.co
+    status: tbd
+  - name: Product Hunt
+    url: https://www.producthunt.com
+    status: tbd
+  - name: Hacker News
+    url: https://news.ycombinator.com
     status: tbd
 
 paper_sources:
@@ -202,3 +242,9 @@ paper_sources:
     url: https://arxiv.org/list/cs.LG/recent
   - name: Hugging Face Papers
     url: https://huggingface.co/papers
+  - name: Papers with Code
+    url: https://paperswithcode.com
+    status: tbd
+  - name: Semantic Scholar
+    url: https://www.semanticscholar.org
+    status: tbd

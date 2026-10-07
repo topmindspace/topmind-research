@@ -1,6 +1,6 @@
 ---
 name: topmind-research
-version: 0.1.0
+version: 0.2.0
 description: >-
   研究入口路由：把"找资料/看动态"分给 topmind-research-collect（客观收集、聚合整理、推荐），
   把"深挖/读论文/做分析"分给 topmind-research-analyze（深度研究、数据整理分析）。

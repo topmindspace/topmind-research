@@ -1,6 +1,6 @@
 ---
 name: topmind-research-analyze
-version: 0.1.0
+version: 0.2.0
 description: >-
   论文与资料深度研究：精读论文/技术报告、多源并行深挖、横向对比、数据收集整理分析，
   输出带核实的研究结论。可由用户直接触发，或由 collect 按升级规则转入。
@@ -40,9 +40,10 @@ updated: 2026-10-07
 ## 工作流
 
 1. **定题**：一句话说清这次研究要回答什么问题。问题不清先问。
+   输入方式（链接/文件/主题/对比）见 `references/input-guide.md`。
 2. **并行深挖**：借鉴 `wide_research` 的 manager+workers 模式——一个 coordinator 按统一 schema 并行查多个源（论文原文、官方报告、第三方解读、相关数据），结果归一化。
 3. **统一输出 schema**（每项研究必含）：
-   - 一句话结论
+   - 一句话结论（带置信度：高/中/低，定义见 `references/input-guide.md`）
    - 关键数据/事实（带来源）
    - 方法与证据强度
    - 局限与反方观点
