@@ -1,0 +1,204 @@
+# 信息源配置 · 改这里，不用改技能
+# 维护说明：新增/下线来源只改本文件；status: tbd 表示待核实，核实后改为 ok
+# 最后更新：2026-10-07
+
+companies:
+  # ---- 美国 ----
+  - name: OpenAI
+    country: US
+    blog: https://openai.com
+    reports: https://openai.com/research
+    status: ok
+  - name: Anthropic
+    country: US
+    blog: https://www.anthropic.com
+    reports: https://www.anthropic.com/research
+    status: ok
+  - name: Google DeepMind
+    country: US
+    blog: https://deepmind.google
+    reports: https://deepmind.google/research/
+    status: ok
+  - name: xAI
+    country: US
+    blog: https://x.ai
+    status: tbd
+  - name: Meta
+    country: US
+    blog: https://ai.meta.com
+    status: ok
+  - name: Microsoft
+    country: US
+    blog: https://www.microsoft.com/en-us/research
+    status: ok
+  - name: Apple
+    country: US
+    blog: https://machinelearning.apple.com
+    status: ok
+  - name: Amazon
+    country: US
+    blog: https://www.amazon.science
+    status: ok
+  - name: NVIDIA
+    country: US
+    blog: https://blogs.nvidia.com
+    status: ok
+  - name: Mistral AI
+    country: FR
+    blog: https://mistral.ai
+    status: ok
+  - name: Cohere
+    country: CA
+    blog: https://cohere.com
+    status: ok
+  - name: Perplexity
+    country: US
+    blog: https://www.perplexity.ai
+    status: tbd
+  - name: Hugging Face
+    country: US
+    blog: https://huggingface.co
+    status: ok
+  # ---- 中国 ----
+  - name: DeepSeek
+    country: CN
+    blog: https://www.deepseek.com
+    status: ok
+  - name: 月之暗面/Kimi
+    country: CN
+    blog: https://www.moonshot.cn
+    status: ok
+  - name: 智谱
+    country: CN
+    blog: https://www.zhipuai.cn
+    status: ok
+  - name: 阿里/千问
+    country: CN
+    blog: https://qwen.ai
+    status: ok
+  - name: 字节跳动/豆包
+    country: CN
+    blog: https://www.doubao.com
+    status: tbd
+  - name: 腾讯/混元
+    country: CN
+    blog: https://hunyuan.tencent.com
+    status: tbd
+  - name: 百度/文心
+    country: CN
+    blog: https://yiyan.baidu.com
+    status: tbd
+  - name: 小米/MiMo
+    country: CN
+    blog: https://www.mi.com
+    status: tbd
+  - name: MiniMax
+    country: CN
+    blog: https://www.minimaxi.com
+    status: tbd
+  - name: 阶跃星辰
+    country: CN
+    blog: https://www.stepfun.com
+    status: tbd
+  - name: 零一万物
+    country: CN
+    blog: https://www.01.ai
+    status: tbd
+  - name: 百川
+    country: CN
+    blog: https://www.baichuan-ai.com
+    status: tbd
+  - name: 华为/盘古
+    country: CN
+    blog: https://www.huawei.com
+    status: tbd
+  - name: 商汤
+    country: CN
+    blog: https://www.sensetime.com
+    status: tbd
+
+people:
+  # 关键人物公开动态（X 为主）；x_handle 待核实的标 tbd，核实后填
+  - name: Sam Altman
+    org: OpenAI
+    role: CEO
+    x_handle: TBD
+  - name: Dario Amodei
+    org: Anthropic
+    role: CEO
+    x_handle: TBD
+  - name: Demis Hassabis
+    org: Google DeepMind
+    role: CEO
+    x_handle: TBD
+  - name: Elon Musk
+    org: xAI
+    role: Founder
+    x_handle: elonmusk
+  - name: 梁文锋
+    org: DeepSeek
+    role: Founder
+    x_handle: TBD
+  - name: 杨植麟
+    org: 月之暗面
+    role: CEO
+    x_handle: TBD
+  - name: 张鹏
+    org: 智谱
+    role: CEO
+    x_handle: TBD
+  - name: 闫俊杰
+    org: MiniMax
+    role: Founder
+    x_handle: TBD
+  - name: 姜大昕
+    org: 阶跃星辰
+    role: Founder
+    x_handle: TBD
+  - name: 李开复
+    org: 零一万物
+    role: Founder
+    x_handle: TBD
+  - name: 王小川
+    org: 百川
+    role: Founder
+    x_handle: TBD
+  - name: Arthur Mensch
+    org: Mistral AI
+    role: CEO
+    x_handle: TBD
+  - name: 黄仁勋
+    org: NVIDIA
+    role: CEO
+    x_handle: TBD
+
+media:
+  # 第三方科技媒体（传闻与转述只作线索，不作定论）
+  - name: 机器之心
+    url: https://www.jiqizhixin.com
+  - name: 量子位
+    url: https://www.qbitai.com
+  - name: 新智元
+    url: https://www.51cto.com
+    status: tbd
+  - name: TechCrunch
+    url: https://techcrunch.com
+  - name: The Verge
+    url: https://www.theverge.com
+
+tool_sources:
+  - name: GitHub Trending
+    url: https://github.com/trending
+  - name: Hugging Face Trending
+    url: https://huggingface.co
+    status: tbd
+
+paper_sources:
+  - name: arXiv cs.CL
+    url: https://arxiv.org/list/cs.CL/recent
+  - name: arXiv cs.AI
+    url: https://arxiv.org/list/cs.AI/recent
+  - name: arXiv cs.LG
+    url: https://arxiv.org/list/cs.LG/recent
+  - name: Hugging Face Papers
+    url: https://huggingface.co/papers
