@@ -16,7 +16,7 @@ FORBIDDEN = (
     (re.compile(r"\.\./"), "引用技能目录外的相对路径"),
     (re.compile(r"topmind-research-(collect|analyze)\b"), "引用已合并的旧子技能"),
     (re.compile(r"topmind-tool-scout"), "引用外部技能 topmind-tool-scout"),
-    (re.compile(r"wide_research"), "引用不存在的工具 wide_research"),
+    (re.compile(r"wide_research"), "引用宿主未必提供的工具 wide_research"),
 )
 
 

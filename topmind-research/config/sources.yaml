@@ -10,7 +10,7 @@
 #
 # 维护规则
 #   - 新增、下线、改地址只改本文件；技能运行时只提出候选，由用户确认后再改（见 references/upgrade-rules.md）
-#   - 核验命令：python3 scripts/check_sources.py（仓库根目录执行，只报告不改文件）
+#   - 核验命令：在 topmind-research 仓库根目录运行 python3 scripts/check_sources.py（只报告不改文件；技能安装目录里没有这个脚本）
 #   - 社区信号（Hacker News、Reddit、X 讨论、YouTube 等）不在本文件维护，交给 last30days
 #
 # 最后更新：2026-10-08

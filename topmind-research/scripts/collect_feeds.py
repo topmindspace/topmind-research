@@ -27,7 +27,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import sources_config  # noqa: E402
 
-UA = "Mozilla/5.0 (compatible; topmind-research-collect/0.2; +https://github.com/topmindspace/topmind-research)"
+UA = "Mozilla/5.0 (compatible; topmind-research/0.2.0 collect; +https://github.com/topmindspace/topmind-research)"
 TRACKING_PARAMS = {"fbclid", "gclid", "mc_cid", "mc_eid", "ref", "ref_src", "spm", "from", "source"}
 CST = timezone(timedelta(hours=8))
 MAX_WORKERS = 6
