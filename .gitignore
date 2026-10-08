@@ -4,3 +4,10 @@ __pycache__/
 .env
 .topmind/
 scripts/.privacy-deny.local
+
+# Release 产物与 npm 打包输出（不入库）
+release-assets/
+*.tgz
+# 主体是 markdown 技能，没有 npm 依赖，锁文件与依赖目录不入库
+node_modules/
+package-lock.json
