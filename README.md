@@ -1,26 +1,46 @@
 # topmind-research
 
-AI 情报与深度研究技能组：一个路由 + 两个子技能。
+AI 行业情报与研究技能（单技能，两种模式）。[English](README.en.md)
 
-| 技能 | 定位 |
+| 模式 | 定位 |
 |---|---|
-| `topmind-research` | 入口路由：只分流，不干活 |
-| `topmind-research-collect` | 应用调研与情报聚合：工具/应用/新闻/大厂动态，客观收集、聚合、推荐 |
-| `topmind-research-analyze` | 论文与资料深度研究：精读论文、解读报告、横向对比、数据分析 |
+| collect | 按 `config/sources.yaml` 扫中美 AI 公司官方公告、技术报告、论文与工具源，去重聚合成周报或快讯素材 |
+| analyze | 围绕一个明确问题精读论文、技术报告或做横向对比，产出带置信度与逐句来源的研究报告和已核验事实表 |
+
+## 安装
+
+技能目录是 `topmind-research/`，整个目录复制到宿主的技能目录即可（目录内自包含，不依赖仓库根的其他文件）：
+
+```bash
+# Claude Code
+cp -r topmind-research ~/.claude/skills/
+# Codex
+cp -r topmind-research ~/.codex/skills/
+```
+
+## 目录
+
+```
+topmind-research/
+├── SKILL.md                 # 模式判断 + 共同铁律 + 按条件加载的文件索引
+├── references/              # collect / analyze 流程、核验、升级与沉淀、断点续跑、可选后端
+├── assets/templates/        # 周报、研究报告、事实表、研究简报、状态文件模板
+├── config/                  # sources.yaml（信源）、categories.yaml（分类）
+└── scripts/                 # 可选：RSS 抓取、引用检查（仅 Python 标准库）
+evals/                       # 发版前跑的小评测集与评分标准
+scripts/                     # 仓库 CI 检查
+tests/                       # 单元测试
+```
 
 ## 设计
 
-- **配置化**：信息源、内容源、分类全部在 `config/` 里改 YAML，不用改技能。
-  - `config/sources.yaml`：20 余家 AI 公司/大厂、关键人物、媒体、论文源、工具源
-  - `config/categories.yaml`：聚合分类与研究类型
-- **核实机制**：`references/verification.md` 是强制门——来源分级、一手优先、关键事实双源交叉、厂商口径标注、无法核实则删或标注。
-- **升级/回流**：`references/upgrade-rules.md` 定义 collect→analyze 升级线与 analyze→collect 知识回流。
+- **配置化**：信源、分类在 `topmind-research/config/` 里改 YAML，不用改技能。每个信源带 `status`（ok / tbd）和 `verified_at`。
+- **核验门**：`references/verification.md` 按事实类型定核验强度，逐句 `[n]` 引用，交付前做引用支撑检查。
+- **与 topmind 衔接**：报告落盘到专题（topmind-organize 约定），记忆只建议不自动写，出稿交 topmind-briefs / topmind-write 时附已核验事实表。
+- **与邻近技能分工**：社区口碑交给 last30days，每日聚合站精选交给 TopStream每日精选，已存笔记的整理交给 topmind-organize。
 
-## 前身
+## 版本与检查
 
-本仓库吸收并替代 `topmind-tool-scout`（工具星探）：其储备库格式与第一期成果（2026-W41）迁移到 collect，`topmind-tool-scout` 本体归档。
-
-## 版本
-
-- root `package.json` 与各技能 `package.json` 的 version 保持一致
-- 发版前检查：SKILL.md frontmatter / README / CHANGELOG 版本引用一致
+- 根 `package.json`、`topmind-research/package.json`、`SKILL.md` 的 `metadata.version` 保持一致，由 `scripts/check_versions.py` 检查。
+- 本地跑全部检查：`bash scripts/ci_checks.sh`（需要 `pip install skills-ref` 才会跑官方校验器，没装会跳过并提示）。
+- 信源可达性巡检：`python3 scripts/check_sources.py`（CI 每周跑一次，只报告不阻断）。

@@ -1,1 +1,11 @@
-{"description":"AI 情报与深度研究技能组：路由 + 应用调研聚合 + 论文资料深度研究","homepage":"https://github.com/topmindspace/topmind-research#readme","license":"MIT","name":"@topmindspace/topmind-research","version":"0.1.0"}
+{
+  "description": "AI 行业情报与研究技能：collect 扫官方信源出周报素材，analyze 精读论文与技术报告出带来源的研究报告",
+  "homepage": "https://github.com/topmindspace/topmind-research#readme",
+  "license": "MIT",
+  "name": "@topmindspace/topmind-research",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/topmindspace/topmind-research.git"
+  },
+  "version": "0.2.0"
+}

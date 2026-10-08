@@ -1,36 +1,10 @@
----
-name: topmind-research-collect
-version: 0.2.0
-description: >-
-  应用调研与情报聚合：客观收集工具/应用/智能体/技能与新闻热点、大厂动态，
-  去重聚合整理，按分类推荐。不做深度分析，需要深挖时按升级规则转 analyze。
-  Use when 找工具、扫新闻、追踪大厂动态、每周情报 sweep、聚合推荐。
-  Do NOT use for 论文精读与深度分析（→ topmind-research-analyze）。
-action_category: research
-triggers:
-  - 找工具
-  - 有什么新工具
-  - 新闻热点
-  - 大厂动态
-  - 每周扫
-  - 聚合推荐
-triggers_cn:
-  - 汇总一下
-  - 最近有什么新的
-  - 推荐几个
-author: TopMindSpace
-license: MIT
-homepage: https://github.com/topmindspace/topmind-research#readme
-updated: 2026-10-07
----
-
 # topmind-research-collect · 应用调研与情报聚合
 
 只做客观收集、聚合、推荐，不做深度分析、不下判断结论（"值得关注"可以，"建议买入"不行）。
 
 ## 信息源（可配置）
 
-读仓库根 `config/sources.yaml`：
+读 `config/sources.yaml`：
 - `tool_sources`：GitHub Trending、AI 资讯站、Product Hunt 等
 - `companies`：24 家 AI 公司/大厂的官网 blog 与新闻页
 - `people`：关键人物（CEO/首席科学家）的公开动态

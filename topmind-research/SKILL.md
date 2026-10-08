@@ -1,65 +1,63 @@
 ---
 name: topmind-research
-version: 0.2.0
 description: >-
-  研究入口路由：把"找资料/看动态"分给 topmind-research-collect（客观收集、聚合整理、推荐），
-  把"深挖/读论文/做分析"分给 topmind-research-analyze（深度研究、数据整理分析）。
-  Use when 做研究、查资料、追踪大厂动态、读论文、行业调研、research。
-  Do NOT use for 纯写作出稿（→ topmind-write / topmind-briefs）、X 运营段子（→ topmind-viral-posts）。
-action_category: research
-triggers:
-  - 做研究
-  - 查资料
-  - 追踪动态
-  - 读论文
-  - 行业调研
-  - 大厂动态
-triggers_cn:
-  - 研究一下
-  - 帮我查查
-  - 最新进展
-  - 论文解读
-author: TopMindSpace
+  AI 行业情报与研究（topmind）。collect 模式按 config/sources.yaml 扫中美 AI 公司官方公告、
+  技术报告与论文源，去重聚合成周报或快讯素材；analyze 模式围绕一个明确问题精读论文、
+  技术报告或做横向对比，产出带置信度与逐句来源的研究报告。Use when 追踪大厂动态、
+  AI 周报 sweep、读论文、解读技术报告或 system card、对比模型或工具、topmind-research。
+  Do NOT use for 社区口碑与近 30 天讨论（→ last30days）、每日精选例行（→ TopStream每日精选）、
+  整理已存笔记或专题内总结（→ topmind-organize）、出稿发文（→ topmind-briefs / topmind-write）。
 license: MIT
-homepage: https://github.com/topmindspace/topmind-research#readme
-updated: 2026-10-07
+compatibility: >-
+  Needs web search and web fetch. Sub-agents and a browser are optional (falls back to
+  sequential work and marks pages it cannot load). Python 3.9+ only for the optional
+  scripts. Writes reports into a topmind workspace when one is present.
+metadata:
+  version: "0.2.0"
+  author: TopMindSpace
+  homepage: https://github.com/topmindspace/topmind-research#readme
+  updated: "2026-10-08"
+  action_category: research
+  triggers: 大厂动态, AI 周报, 情报 sweep, 读论文, 论文精读, 技术报告解读, system card, 模型对比, topmind-research
 ---
 
-# topmind-research · 研究入口路由
+# topmind-research · AI 情报与研究
 
-本技能不直接干活，只做路由。两个子技能分工如下：
+两种模式，同一套核验口径和产出模板。所有路径相对本技能目录。
 
-| 子技能 | 定位 | 何时用 |
+| 模式 | 做什么 | 不做什么 |
 |---|---|---|
-| `topmind-research-collect` | 客观收集、聚合整理、推荐 | 找工具/应用、扫新闻热点、追踪大厂动态、每周 sweep |
-| `topmind-research-analyze` | 深度研究、论文精读、数据整理分析 | 读论文、解读技术报告、横向对比、深挖一个题目 |
+| collect | 按信源清单扫官方公告、技术报告、论文与工具源，去重聚合，出周报或快讯素材 | 不下结论，不做深度分析 |
+| analyze | 围绕一个明确问题精读一手资料、横向对比，出研究报告和已核验事实表 | 不做泛泛汇总 |
 
-## 路由规则
+## 先读哪份
 
-1. 用户要"看看有什么新的/汇总一下/推荐几个" → collect。
-2. 用户要"深入讲讲/这篇论文说了什么/对比一下/分析数据" → analyze。
-3. 一句话里两者都有（"扫一遍，有值得深挖的再细读"）→ 先 collect，命中升级线后转 analyze。
-4. 纯写作出稿（写文章、发快讯）不归本路由，写完研究报告后如需出稿，转 `topmind-write` / `topmind-briefs`。
+| 条件 | 必读 |
+|---|---|
+| 扫动态、周报、大厂动态、找新工具 | `references/collect.md` + `config/sources.yaml` |
+| 读论文、解读技术报告、对比、深挖一个问题 | `references/analyze.md` |
+| 交付前（两种模式都要） | `references/verification.md` |
+| 用户给的输入形式不清楚 | `references/input-guide.md` |
+| collect 条目要不要转 analyze、产出放哪 | `references/upgrade-rules.md` |
+| 中断后继续 | `references/state.md` |
+| 用户要求调用 Gemini Deep Research | `references/backend-gemini.md` |
+| 碰到人名、产品名译法 | `references/errata.md` |
 
-## A→B 升级规则
+模板在 `assets/templates/`：`collect-weekly.md`、`analyze-report.md`、`fact-sheet.md`、`research-brief.md`、`state.md`。
 
-详见 `references/upgrade-rules.md`。核心三条：
-- 用户明确指定深挖；
-- collect 评分达到升级线（见 collect 的 rubric）；
-- 重大发布/突发（新模型、新论文、新融资并购）默认升级。
+## 模式判断
 
-## B→A 回流
+1. 「这周有什么新的 / 汇总一下大厂动态 / 推荐几个新工具」→ collect。
+2. 「这篇论文说了什么 / 解读这份技术报告 / A 和 B 对比」→ analyze。
+3. 两者都有（「扫一遍，值得的再细读」）→ 先 collect，在周报末尾列出 analyze 候选，用户点名后再进 analyze。
+4. 对象是工作区里已存的笔记 → 交给 topmind-organize，本技能不处理。
+5. 要的是社区口碑、X/Reddit/HN 讨论 → 交给 last30days；collect 周报需要「社区反应」一节时，按 `references/collect.md` 调用它。
 
-analyze 的结论沉淀为知识：进用户记忆/专题，下次 collect 扫到相关动态时自动关联上下文。
+## 共同铁律
 
-## 配置
-
-信息源、内容源、分类全部可配置，改 YAML 不用改技能：
-- `config/sources.yaml`：公司、关键人物、媒体、论文源、工具源
-- `config/categories.yaml`：collect 的聚合分类、analyze 的研究类型
-
-改完在 README 记录变更日期。
-
-## 核实铁律（两个子技能强制执行）
-
-`references/verification.md` 是发布前的强制门：来源分级、一手优先、关键事实双源交叉、厂商口径标注、无法核实则删或明确标注。任何输出未经核实门不得交付。
+- 交付前必须过 `references/verification.md`，未通过不交付。
+- 每个事实句带 `[n]` 引用，文末来源表写明级别（T0–T3）、发布日期、访问日期。
+- 不自动写记忆、不自动改 `config/sources.yaml`、不自动升级深挖：都只在回执里列为建议，用户确认后再做。
+- 子 agent 并行上限 6 个，子 agent 不得再派子 agent（细则见 `references/analyze.md`）。
+- 推测与事实分开写，推测段落标「（推测）」。
+- 只用公开信息；不收录私人联系方式；配置文件里不放任何密钥。

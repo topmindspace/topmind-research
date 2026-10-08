@@ -1,1 +1,13 @@
-{"description":"topmind-research","homepage":"https://github.com/topmindspace/topmind-research#readme","license":"MIT","name":"@topmindspace/topmind-research","version":"0.1.0"}
+{
+  "author": "TopMindSpace",
+  "description": "AI 行业情报与研究：collect 扫官方信源出周报素材，analyze 精读论文与技术报告出带来源的研究报告。",
+  "license": "MIT",
+  "name": "topmind-research",
+  "private": true,
+  "repository": {
+    "directory": "topmind-research",
+    "type": "git",
+    "url": "git+https://github.com/topmindspace/topmind-research.git"
+  },
+  "version": "0.2.0"
+}

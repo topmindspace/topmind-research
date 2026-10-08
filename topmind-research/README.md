@@ -1,3 +1,3 @@
-# topmind-research
+# topmind-research（技能目录）
 
-见仓库根 README.md。用仓库根 `config/` 的 YAML 配置信息源与分类，用 `references/verification.md` 做发布前核实。
+入口是 `SKILL.md`。本目录自包含：配置在 `config/`，流程与规则在 `references/`，模板在 `assets/templates/`，可选脚本在 `scripts/`。仓库说明见上级目录的 README.md。

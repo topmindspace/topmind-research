@@ -1,35 +1,8 @@
----
-name: topmind-research-analyze
-version: 0.2.0
-description: >-
-  论文与资料深度研究：精读论文/技术报告、多源并行深挖、横向对比、数据收集整理分析，
-  输出带核实的研究结论。可由用户直接触发，或由 collect 按升级规则转入。
-  Use when 读论文、解读技术报告、深度调研、横向对比、数据分析。
-  Do NOT use for 简单汇总与推荐（→ topmind-research-collect）。
-action_category: research
-triggers:
-  - 读论文
-  - 论文解读
-  - 深度研究
-  - 技术报告解读
-  - 横向对比
-  - 数据分析
-triggers_cn:
-  - 深入讲讲
-  - 这篇论文说了什么
-  - 对比一下
-  - 深挖一下
-author: TopMindSpace
-license: MIT
-homepage: https://github.com/topmindspace/topmind-research#readme
-updated: 2026-10-07
----
-
 # topmind-research-analyze · 论文与资料深度研究
 
 ## 信息源（可配置）
 
-读仓库根 `config/sources.yaml`：
+读 `config/sources.yaml`：
 - `paper_sources`：arXiv 分类、Hugging Face 论文榜
 - `report_sources`：各公司研究报告、system cards、技术博客（见 `companies[].reports`）
 
