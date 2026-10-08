@@ -1,9 +1,10 @@
 # 分类配置 · 改这里，不用改技能
-# 最后更新：2026-10-08
+# 最后更新：2026-10-08（0.2.1 增加「公司动态」）
 
 collect_categories:
   # collect 聚合输出的分类
   - 新品发布
+  - 公司动态      # 合作、投入计划、组织调整、安全与内容标识措施等不属于新品的公司公告
   - 融资并购
   - 开源项目
   - 工具应用
@@ -19,4 +20,5 @@ analyze_types:
   - 横向对比
   - 数据分析
 
-# collect 的排序规则见 references/collect.md「排序」；输出模板在 assets/templates/
+# 排序保底分类（references/collect.md 第 5 步）：融资并购、政策监管
+# collect 的排序规则见 references/collect.md「排序」，脚本实现在 scripts/rank_items.py；输出模板在 assets/templates/
