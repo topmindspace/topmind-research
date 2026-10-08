@@ -28,6 +28,46 @@ class SourcesConfigTest(unittest.TestCase):
         self.assertNotIn("Hacker News", names)
         self.assertNotIn("Papers with Code", names)
 
+    def test_parser_null(self):
+        data = sources_config.parse("people:\n  - name: A\n    x_handle: null\n    note: \"null\"\n")
+        self.assertIsNone(data["people"][0]["x_handle"])
+        self.assertEqual(data["people"][0]["note"], "null")
+
+    def test_people_null_needs_status_and_note(self):
+        bad = check_sources.validate({"people": [{"name": "A", "x_handle": None}]})
+        self.assertTrue(any("null" in e for e in bad))
+        ok = check_sources.validate({"people": [{"name": "A", "x_handle": None, "x_status": "none", "note": "依据"}]})
+        self.assertEqual(ok, [])
+
+    def test_people_candidate_needs_note(self):
+        bad = check_sources.validate({"people": [{"name": "A", "x_handle": "TBD", "x_status": "candidate"}]})
+        self.assertTrue(any("candidate" in e for e in bad))
+
+    def test_status_values(self):
+        bad = check_sources.validate({"media": [{"name": "X", "url": "https://x.com", "status": "ok_with_ca_note", "fetch": "html"}]})
+        self.assertTrue(any("status" in e for e in bad))
+        self.assertTrue(any("fetch" in e for e in bad))
+
+    def test_js_page_without_machine_channel_is_not_ok(self):
+        bad = check_sources.validate({"companies": [{"name": "X", "blog": "https://x.com", "status": "ok", "fetch": "js"}]})
+        self.assertTrue(any("page-only" in e for e in bad))
+        ok = check_sources.validate({"companies": [{"name": "X", "blog": "https://x.com", "status": "page-only", "fetch": "js", "note": "前端渲染"}]})
+        self.assertEqual(ok, [])
+        ok = check_sources.validate({"companies": [{"name": "X", "blog": "https://x.com", "status": "ok", "fetch": "js",
+                                                    "hf_api": "https://huggingface.co/api/models?author=X"}]})
+        self.assertEqual(ok, [])
+
+    def test_ca_bundle_path_not_committed_and_headers_checked(self):
+        bad = check_sources.validate({"media": [{"name": "X", "url": "https://x.com", "status": "ok", "fetch": "http",
+                                                 "ca_bundle": "/opt/certs/bundle.pem", "headers": "chrome"}]})
+        self.assertTrue(any("ca_bundle" in e for e in bad))
+        self.assertTrue(any("headers" in e for e in bad))
+
+    def test_company_x_accounts(self):
+        accounts = {i["name"]: i.get("x_account") for i in self.config["companies"]}
+        self.assertEqual(accounts["MiniMax"], "MiniMax_AI")
+        self.assertEqual(accounts["字节跳动/Seed"], "ByteDanceSeed_")
+
     def test_tbd_has_note(self):
         bad = check_sources.validate({"media": [{"name": "X", "url": "https://x.com", "status": "tbd", "fetch": "http"}]})
         self.assertTrue(any("note" in e for e in bad))

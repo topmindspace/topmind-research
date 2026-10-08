@@ -1,10 +1,28 @@
 # 信息源配置 · 改这里，不用改技能
 #
 # 字段说明
-#   blog / news / reports / url：人看的列表页或主页
-#   rss：可直接解析的 RSS/Atom 地址，collect 优先用它（scripts/collect_feeds.py）
-#   fetch：http = 普通请求可取；browser = 普通请求被拦（403/超时），需浏览器或 WebFetch
-#   status：ok = 已核验可用；tbd = 待核（地址打不开、不是官方新闻页或无法确认），collect 可读但须在周报「信源状态」里列出
+#   人看的页面
+#     blog / news / reports / url：列表页或主页；sitemap：站点地图；podcast：播客列表；trending：热门榜
+#   可机读渠道（collect 优先用，scripts/collect_feeds.py 会解析前五种）
+#     rss / rss_extra：RSS 或 Atom（rss_extra 为补充渠道，覆盖范围见 note）
+#     hf_api：Hugging Face 组织模型列表 JSON，按创建时间倒序，作为 T0 发布信号
+#     gh_api：GitHub 组织仓库（按创建时间）或 releases 列表 JSON，作为 T0 发布信号；未登录每小时 60 次
+#     papers_api：Hugging Face 每日论文 JSON，脚本按窗口逐日取，作为论文的筛选信号
+#     list_api：站点自己的列表接口，脚本不解析，agent 按 note 调用；list_api_method / list_api_body 写请求方法和表单
+#   fetch（怎么读人看的页面）
+#     http = 普通请求能拿到带日期的列表；browser = 普通请求被拦（403/超时），需浏览器或 WebFetch；
+#     js = 页面能打开，但列表靠前端渲染，静态请求拿不到条目；api = 列表要走 list_api；
+#     x = 页面拿不到，用 x_account 的官方帖子确认发布
+#   status（这个信源 collect 能不能用）
+#     ok = 至少有一个已核验的渠道能拿到带日期的条目（可机读渠道，或 fetch: http 的列表页）
+#     page-only = 可打开但不可机读：页面能打开，列表靠前端渲染，又没有可机读渠道，只能浏览器或人工看
+#     blocked = 普通请求被拦（如 Cloudflare 人机验证），没有可机读渠道或只有覆盖不全的补充渠道
+#     tbd = 待核（地址打不开、不是官方新闻页或无法确认）
+#     ok 以外的状态都要在 note 写原因；collect 周报的「信源状态」要列出 ok 以外的信源和「抓到 0 条 / 没抓到」
+#   headers：请求头档位，default（脚本 UA）/ browser（全套浏览器头）/ none（不主动带 UA）
+#   ca_root：该站证书链用到的、部分系统 CA 库还没有的根证书地址；抓取报 SSL 错误时下载它，用 collect_feeds.py --ca-bundle 追加。
+#     ca_bundle（本机 PEM 路径）只写在自己安装目录的副本里，不提交进仓库。任何情况下都不跳过证书校验
+#   x_account：公司官方 X 账号（不带 @），供 last30days 或人工查看
 #   verified_at：最近一次人工或脚本核验日期
 #   note：核验备注
 #
@@ -12,6 +30,7 @@
 #   - 新增、下线、改地址只改本文件；技能运行时只提出候选，由用户确认后再改（见 references/upgrade-rules.md）
 #   - 核验命令：在 topmind-research 仓库根目录运行 python3 scripts/check_sources.py（只报告不改文件；技能安装目录里没有这个脚本）
 #   - 社区信号（Hacker News、Reddit、X 讨论、YouTube 等）不在本文件维护，交给 last30days
+#   - 可机读渠道只写实际请求过、返回了数据的地址，note 里写最新一条的日期
 #
 # 最后更新：2026-10-08
 
@@ -53,10 +72,12 @@ companies:
   - name: Meta
     country: US
     blog: https://ai.meta.com/blog/
-    fetch: browser
-    status: tbd
+    fetch: http
+    headers: browser
+    status: ok
+    x_account: AIatMeta
     verified_at: "2026-10-08"
-    note: 待核。curl 与 WebFetch 均返回 400，未能确认页面内容
+    note: 无 RSS（/blog/rss/、/blog/feed/、/rss/ 均 400）。最新 2026-07-27；列表不严格按时间排序，须按日期重排。curl 只带 Chrome UA、不带 Sec-Fetch-* 头时返回 400，不带 UA 或带全套浏览器头时 200，请求头按 headers: browser
   - name: Microsoft
     country: US
     blog: https://www.microsoft.com/en-us/research/blog/
@@ -96,13 +117,16 @@ companies:
     fetch: http
     status: ok
     verified_at: "2026-10-08"
+    note: 2026-10-08 验证运行中 curl 一度返回 000、WebFetch 可读；同日复查 curl 200，页面有带日期列表
   - name: Perplexity
     country: US
-    blog: https://www.perplexity.ai
-    fetch: browser
-    status: tbd
+    blog: https://www.perplexity.ai/hub/blog
+    rss_extra: https://docs.perplexity.ai/docs/resources/changelog/rss.xml
+    fetch: x
+    status: blocked
+    x_account: perplexity_ai
     verified_at: "2026-10-08"
-    note: 待核。主页与 hub/blog 普通请求 403 或超时，未确认新闻页地址
+    note: 博客 /hub/blog 及其 RSS 均 403（Cloudflare 人机验证，cf-mitigated challenge），WebFetch 超时；博文发布用官方 X 帖子确认（如 2026-10-08 00:09 UTC+8 的 Multimodal embeddings beyond a single vector，https://x.com/perplexity_ai/status/2107866029745746177），正文需浏览器。rss_extra 是官方 API 更新日志 RSS（200，最新 2026-10-06 05:42 UTC+8），只覆盖 API
   - name: Hugging Face
     country: US
     blog: https://huggingface.co/blog
@@ -114,105 +138,146 @@ companies:
   - name: DeepSeek
     country: CN
     blog: https://www.deepseek.com
-    news: https://api-docs.deepseek.com/
+    news: https://api-docs.deepseek.com/news/
+    sitemap: https://api-docs.deepseek.com/sitemap.xml
+    hf_api: https://huggingface.co/api/models?author=deepseek-ai&sort=createdAt&direction=-1&limit=20
+    gh_api: https://api.github.com/orgs/deepseek-ai/repos?sort=created&direction=desc&per_page=20
     fetch: http
     status: ok
+    x_account: deepseek_ai
     verified_at: "2026-10-08"
-    note: 发布公告在 api-docs.deepseek.com 的 News 栏目（/news/ 下各篇）
+    note: 发布公告在 api-docs 的 News 栏目；/news/ 显示文档首页，侧栏只链到最新一篇（news260910），全部公告见 sitemap.xml 里的 news/newsYYMMDD。hf_api 最新 2026-09-10 DeepSeek-V4.1-Flash；gh_api 最新 2026-09-30
   - name: 月之暗面/Kimi
     country: CN
     blog: https://www.moonshot.cn
     news: https://www.kimi.com/
+    hf_api: https://huggingface.co/api/models?author=moonshotai&sort=createdAt&direction=-1&limit=20
+    gh_api: https://api.github.com/orgs/MoonshotAI/repos?sort=created&direction=desc&per_page=20
     fetch: http
     status: ok
+    x_account: Kimi_Moonshot
     verified_at: "2026-10-08"
+    note: moonshot.cn 静态页有少量日期（最新 2026-07）。hf_api 最新 2026-06-13 Kimi-K3；gh_api 最新 2026-07-27
   - name: 智谱
     country: CN
-    blog: https://www.zhipuai.cn
+    blog: https://www.zhipuai.cn/zh
+    hf_api: https://huggingface.co/api/models?author=zai-org&sort=createdAt&direction=-1&limit=20
+    gh_api: https://api.github.com/orgs/zai-org/repos?sort=created&direction=desc&per_page=20
     fetch: http
     status: ok
+    x_account: Zai_org
     verified_at: "2026-10-08"
-    note: 跳转到 /zh，页面标题为 Z.ai；z.ai/blog 返回 404
+    note: 根地址跳转到 /zh（Python 请求根地址偶发 SSL EOF，证书链本身校验通过，直接用 /zh），页面标题为 Z.ai，未找到带日期的新闻列表；z.ai/blog 返回 404。hf_api 最新 2026-08-25 GLM-5.3-Flash（旧组织名 THUDM 查询返回 0 条，不用）；gh_api 最新 2026-09-20
   - name: 阿里/千问
     country: CN
     blog: https://qwen.ai
     reports: https://qwen.ai/research
     news: https://qwenlm.github.io/blog/
-    fetch: http
+    hf_api: https://huggingface.co/api/models?author=Qwen&sort=createdAt&direction=-1&limit=20
+    gh_api: https://api.github.com/orgs/QwenLM/repos?sort=created&direction=desc&per_page=20
+    fetch: js
     status: ok
+    x_account: Alibaba_Qwen
     verified_at: "2026-10-08"
+    note: qwen.ai 与 qwen.ai/research 为前端渲染，静态请求拿不到列表；其前端读取的 /api/page_config 列表最新只到 2025-12-23，qwenlm.github.io/blog 最新 2025-09-23，都晚于 HF 上的新模型，当前官方博客入口未确认，暂不替换。发布信号以 hf_api（最新 2026-09-20）、gh_api（最新 2026-09-29）和 X 为准
   - name: 字节跳动/Seed
     country: CN
     blog: https://seed.bytedance.com/
+    hf_api: https://huggingface.co/api/models?author=ByteDance-Seed&sort=createdAt&direction=-1&limit=20
+    gh_api: https://api.github.com/orgs/ByteDance-Seed/repos?sort=created&direction=desc&per_page=20
     fetch: http
     status: ok
+    x_account: ByteDanceSeed_
     verified_at: "2026-10-08"
-    note: 原地址 doubao.com 跳转到对话产品页，不含新闻；改为 ByteDance Seed 官网（跳转到 /en/）
+    note: 原地址 doubao.com 跳转到对话产品页，不含新闻；改为 ByteDance Seed 官网（跳转到 /en/，静态页有带日期条目，最新 2026-07-31）。官方 X 是 @ByteDanceSeed_（不带下划线的 @bytedanceSeed 是空号）。hf_api 最新 2026-07-03；gh_api 最新 2026-08-17
   - name: 腾讯/混元
     country: CN
     blog: https://hunyuan.tencent.com
-    fetch: http
+    hf_api: https://huggingface.co/api/models?author=tencent&sort=createdAt&direction=-1&limit=20
+    gh_api: https://api.github.com/orgs/Tencent-Hunyuan/repos?sort=created&direction=desc&per_page=20
+    fetch: js
     status: ok
     verified_at: "2026-10-08"
+    note: 官网为前端渲染，静态请求拿不到列表。hf_api 的 tencent 组织覆盖整个腾讯（不只混元），最新 2026-09-16；gh_api Tencent-Hunyuan 最新 2026-09-21
   - name: 百度/文心
     country: CN
-    blog: https://yiyan.baidu.com
+    blog: https://ernie.baidu.com/blog
+    rss: https://ernie.baidu.com/blog/index.xml
     fetch: http
-    status: tbd
+    status: ok
+    x_account: ErnieforDevs
     verified_at: "2026-10-08"
-    note: 待核。跳转到 wenxin.baidu.com 产品页，未找到官方新闻或技术博客列表页
+    note: 官方 ERNIE Blog（英文），RSS 最新 2026-05-09 ERNIE 5.1；RSS 里的 link 是相对路径，collect_feeds.py 按 RSS 地址补成 https://ernie.baidu.com/...。research.baidu.com 显示网站维护中；GitHub PaddlePaddle/ERNIE releases 最新 2025-06-30，只作补充。企业 X 账号另有 @Baidu_Inc
   - name: 小米/MiMo
     country: CN
     blog: https://mimo.xiaomi.com/
+    hf_api: https://huggingface.co/api/models?author=XiaomiMiMo&sort=createdAt&direction=-1&limit=20
+    gh_api: https://api.github.com/orgs/XiaomiMiMo/repos?sort=created&direction=desc&per_page=20
     fetch: http
     status: ok
     verified_at: "2026-10-08"
-    note: 原地址 mi.com 按地区跳转到商城；改为 MiMo 官网
+    note: 原地址 mi.com 按地区跳转到商城；改为 MiMo 官网（静态页有带日期条目，最新 2026-06-29）。hf_api 最新 2026-09-27；gh_api 最新 2026-09-21
   - name: MiniMax
     country: CN
     blog: https://www.minimax.io/news
-    fetch: http
+    hf_api: https://huggingface.co/api/models?author=MiniMaxAI&sort=createdAt&direction=-1&limit=20
+    gh_api: https://api.github.com/orgs/MiniMax-AI/repos?sort=created&direction=desc&per_page=20
+    fetch: js
     status: ok
+    x_account: MiniMax_AI
     verified_at: "2026-10-08"
+    note: /news 为前端渲染，静态请求拿不到列表。官方 X 是 @MiniMax_AI（@MiniMax__AI 不存在）。hf_api 最新 2026-08-07；gh_api 最新 2026-10-02
   - name: 阶跃星辰
     country: CN
     blog: https://www.stepfun.com
-    fetch: http
+    hf_api: https://huggingface.co/api/models?author=stepfun-ai&sort=createdAt&direction=-1&limit=20
+    gh_api: https://api.github.com/orgs/stepfun-ai/repos?sort=created&direction=desc&per_page=20
+    fetch: js
     status: ok
+    x_account: StepFun_ai
     verified_at: "2026-10-08"
-    note: 主页可访问；新闻列表页地址未确认
+    note: 主页为前端渲染，新闻列表页地址未确认。hf_api 最新 2026-05-28；gh_api 最新 2026-09-22
   - name: 零一万物
     country: CN
     blog: https://www.01.ai
+    hf_api: https://huggingface.co/api/models?author=01-ai&sort=createdAt&direction=-1&limit=20
+    gh_api: https://api.github.com/orgs/01-ai/repos?sort=created&direction=desc&per_page=20
     fetch: http
     status: ok
     verified_at: "2026-10-08"
-    note: 主页可访问；新闻列表页地址未确认
+    note: 主页静态请求可取，但没有带日期的新闻列表。hf_api 最新 2024-08-21、gh_api 最新 2025-11-03，开源发布已基本停止，窗口内 0 条属正常
   - name: 百川
     country: CN
     blog: https://www.baichuan-ai.com
+    hf_api: https://huggingface.co/api/models?author=baichuan-inc&sort=createdAt&direction=-1&limit=20
+    gh_api: https://api.github.com/orgs/baichuan-inc/repos?sort=created&direction=desc&per_page=20
+    fetch: js
+    status: ok
+    x_account: BaichuanAI
+    verified_at: "2026-10-08"
+    note: 主页为前端渲染，新闻列表页地址未确认。hf_api 最新 2026-02-06；gh_api 最新 2026-02-05。X 官方号低活跃
+  - name: 华为/盘古
+    country: CN
+    blog: https://www.huaweicloud.com/news.html
     fetch: http
     status: ok
     verified_at: "2026-10-08"
-    note: 主页可访问；新闻列表页地址未确认
-  - name: 华为/盘古
-    country: CN
-    blog: https://www.huawei.com
-    fetch: http
-    status: tbd
-    verified_at: "2026-10-08"
-    note: 待核。集团主页，未找到盘古大模型的官方新闻页
+    note: 华为云新闻中心，服务端渲染，列表、日期、链接可直接解析；全量新闻，没有 AI 专门筛选，最新 2026-09-19，盘古相关最近一条 2026-07-31 openPangu-2.0-Pro 开源。无 RSS（/rss.xml 403）。huawei.com/cn/news 能打开但列表靠前端渲染，不用
   - name: 商汤
     country: CN
-    blog: https://www.sensetime.com
+    blog: https://www.sensetime.com/cn/news
     fetch: http
-    status: tbd
+    status: ok
+    x_account: SenseTime_AI
     verified_at: "2026-10-08"
-    note: 待核。主页按地区跳转，未确认中文新闻页地址
+    note: 中文新闻中心，静态 HTML 有条目和日期，最新 2026-09-30；英文版 /en/news；/cn/news-index 404；无 RSS
 
 people:
-  # 关键人物公开动态。collect 不直接抓 X，人物动态交给 last30days 或人工查看
-  # x_handle 只填通过 X 官方接口按用户名查到、且简介能对上身份的账号；确认不了的保留 TBD
+  # 关键人物公开动态。collect 不直接抓 X，人物动态交给 last30days（X 已配置时才有用）或人工查看
+  # x_handle 只填通过 X 官方接口按用户名查到、且简介能对上身份的账号；确认不了的保留 TBD；
+  #   有可信报道说本人不用 X 的写 null（并写 x_status: none 和依据）
+  # x_status：confirmed = 已确认 / none = 本人没有账号 / unverified = 未确定 / candidate = 有候选但未确认
+  # 没有个人账号的，note 写用哪个公司官方号代替（公司号见 companies 的 x_account）
   - name: Sam Altman
     org: OpenAI
     role: CEO
@@ -236,23 +301,34 @@ people:
   - name: 梁文锋
     org: DeepSeek
     role: Founder
-    x_handle: TBD
+    x_handle: null
+    x_status: none
+    x_verified_at: "2026-10-08"
+    note: 本人无 X 账号；@LiangWenfeng_ 为仿冒（parody）账号，官方只认 @deepseek_ai。依据：Reuters 事实核查 https://www.reuters.com/fact-check/fake-x-posts-deepseek-founder-stem-parody-account-2025-01-29/ ；SCMP https://www.scmp.com/tech/big-tech/article/3297829/deepseek-warns-fake-social-media-accounts-ai-apps-popularity-soars
   - name: 杨植麟
     org: 月之暗面
     role: CEO
     x_handle: TBD
+    x_status: unverified
+    note: 未发现本人账号（2026-10-08 核查），用公司官方号 @Kimi_Moonshot 代替
   - name: 张鹏
     org: 智谱
     role: CEO
     x_handle: TBD
+    x_status: unverified
+    note: 未发现本人账号（2026-10-08 核查），用公司官方号 @Zai_org 代替
   - name: 闫俊杰
     org: MiniMax
     role: Founder
     x_handle: TBD
+    x_status: unverified
+    note: 未发现本人账号（@yanjunjie、@junjieyan 均为无简介旧号，判断无关），用公司官方号 @MiniMax_AI 代替
   - name: 姜大昕
     org: 阶跃星辰
     role: Founder
     x_handle: TBD
+    x_status: candidate
+    note: 候选 @DaxinJiang（未确认：无简介、无官方链接，帖子只转发 @StepFun_ai，官方号未 @ 过它）；暂用公司官方号 @StepFun_ai
   - name: 李开复
     org: 零一万物
     role: Founder
@@ -262,6 +338,9 @@ people:
     org: 百川
     role: Founder
     x_handle: TBD
+    x_status: unverified
+    weibo: https://weibo.com/xiaochuanwang
+    note: 活跃平台是微博（weibo 字段）；X 未发现本人账号，用公司官方号 @BaichuanAI 代替（低活跃）
   - name: Arthur Mensch
     org: Mistral AI
     role: CEO
@@ -282,10 +361,14 @@ people:
     org: 阿里
     role: 通义负责人
     x_handle: TBD
+    x_status: unverified
+    note: 未发现本人账号（@JingrenZhou 是无关垃圾号），用公司官方号 @Alibaba_Qwen 代替
   - name: 朱文佳
     org: 字节跳动
     role: Seed 负责人
     x_handle: TBD
+    x_status: unverified
+    note: 未发现可核实的本人账号（@ZHUWENJIA 受保护无法核实），用公司官方号 @ByteDanceSeed_ 代替
 
 media:
   # 第三方科技媒体（T1/T2；传闻与转述只作线索，不作定论）
@@ -319,11 +402,16 @@ media:
     status: ok
     verified_at: "2026-10-08"
   - name: 晚点 LatePost
-    url: https://www.latepost.com
-    fetch: browser
-    status: tbd
+    url: https://www.latepost.com/news/index
+    list_api: https://www.latepost.com/news/get-news-data
+    list_api_method: POST
+    list_api_body: page=1&limit=20
+    podcast: https://podcast.latepost.com/episodes
+    fetch: api
+    status: ok
+    ca_root: https://letsencrypt.org/certs/gen-y/root-yr.pem
     verified_at: "2026-10-08"
-    note: 待核。curl 与 WebFetch 均超时
+    note: 必须用 www 子域（裸域证书只覆盖 admin.latepost.com）。列表页是 Vue 模板，HTML 里没有条目，用 list_api（POST 表单 page=1&limit=N；加 programa=1 只返回晚点独家）；接口日期没有年份，按 id 递增推断。www 的证书链到 Let's Encrypt 新根 ISRG Root YR，部分系统 CA 库没有，报 SSL 错误时下载 ca_root 追加（collect_feeds.py --ca-bundle），不要跳过校验。最新 2026-10-01
 
 benchmarks:
   # 模型榜单与评测（厂商自报成绩只作线索，以第三方实测为准）
@@ -373,7 +461,9 @@ tool_sources:
     note: curl 带浏览器 UA 返回 200；Python urllib 返回 403，按需浏览器处理
 
 paper_sources:
+  # 论文源只作候选池：arXiv 条目要有筛选信号（HF 每日论文、官方博客或技术报告提及、用户指定方向）才进周报，见 references/collect.md 第 5 步
   # Papers with Code 已移出：原站跳转到 Hugging Face Papers trending，与下方条目重复
+  # Semantic Scholar 已移出：只有主页，没有可扫的列表页或 RSS
   - name: arXiv cs.CL
     url: https://arxiv.org/list/cs.CL/recent
     rss: https://rss.arxiv.org/rss/cs.CL
@@ -395,11 +485,8 @@ paper_sources:
   - name: Hugging Face Papers
     url: https://huggingface.co/papers
     trending: https://huggingface.co/papers/trending
+    papers_api: https://huggingface.co/api/daily_papers
     fetch: http
     status: ok
     verified_at: "2026-10-08"
-  - name: Semantic Scholar
-    url: https://www.semanticscholar.org
-    fetch: http
-    status: ok
-    verified_at: "2026-10-08"
+    note: papers_api 加 ?date=YYYY-MM-DD 取当日论文和点赞数（2026-10-07 返回 50 篇），collect_feeds.py 按窗口逐日取，作为 arXiv 论文的筛选信号
