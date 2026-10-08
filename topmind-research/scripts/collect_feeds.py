@@ -39,7 +39,7 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import sources_config  # noqa: E402
 
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 UA = f"Mozilla/5.0 (compatible; topmind-research/{VERSION} collect; +https://github.com/topmindspace/topmind-research)"
 BROWSER_HEADERS = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36",

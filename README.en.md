@@ -11,14 +11,32 @@ Outputs are written in Chinese by default.
 
 ## Install
 
-The skill directory is `topmind-research/`. Copy the whole directory into your host's skills folder; it is self-contained.
+This skill is **not published to npm**; `npm i @topmindspace/topmind-research` returns 404. The skill directory is `topmind-research/` and it is self-contained. Pick one:
+
+**Option 1: skills CLI ([vercel-labs/skills](https://github.com/vercel-labs/skills), Node.js 22+)**
 
 ```bash
-# Claude Code
-cp -r topmind-research ~/.claude/skills/
-# Codex
-cp -r topmind-research ~/.codex/skills/
+# project scope (.claude/skills/ etc., depending on the agent)
+npx skills add topmindspace/topmind-research --agent claude-code
+# user scope
+npx skills add topmindspace/topmind-research --agent claude-code -g
 ```
+
+The CLI copies only the `topmind-research/` skill directory; the repo-level `evals/`, `tests/` and `scripts/` stay out of your host.
+
+**Option 2: git clone and copy**
+
+```bash
+git clone --depth 1 https://github.com/topmindspace/topmind-research.git
+# Claude Code
+cp -r topmind-research/topmind-research ~/.claude/skills/
+# Codex
+cp -r topmind-research/topmind-research ~/.codex/skills/
+```
+
+To upgrade, delete the old `topmind-research/` in your host first; back up `config/sources.yaml` if you edited it.
+
+Do not use the topmind-skills pack installer for this repo: it copies the repo-level `evals/`, `LICENSE` and `README.md` into the skill folder.
 
 ## Layout
 
@@ -40,11 +58,11 @@ tests/                       # unit tests
 - **Verification gate**: `references/verification.md` sets the bar per fact type (T0–T3 source tiers, vendor-claim labels), requires `[n]` citations on every factual sentence, and a citation-support check before delivery.
 - **Effort scaling**: analyze starts with a research brief, picks an effort tier (single fact / comparison / survey), caps parallel sub-agents at 6, runs at most two gap-filling rounds, and writes once after research is complete.
 - **No silent side effects**: the skill never writes memory, edits `sources.yaml`, or starts a deep dive on its own; it lists suggestions and waits for the user.
-- **Neighbouring skills**: community buzz goes to last30days, daily digests to TopStream每日精选, organising stored notes to topmind-organize, publishing is suggested in the receipt: short drafts to topmind-briefs, WeChat articles to topmind-wechat, everything else to topmind-write.
+- **Neighbouring skills**: community buzz goes to last30days, daily digests to TopStream每日精选, organising stored notes to topmind-organize, publishing is suggested in the receipt: short drafts to topmind-briefs, WeChat articles to topmind-wechat-post, everything else to topmind-write.
 - **Optional backend**: `references/backend-gemini.md` describes running Gemini Deep Research when the user explicitly asks for it.
 
 ## Versioning and checks
 
 - The root `package.json`, `topmind-research/package.json`, `metadata.version` in `SKILL.md`, `VERSION` in `scripts/collect_feeds.py` and the CHANGELOG must match; `scripts/check_versions.py` enforces this. Versions bump from the lowest digit.
 - Run every check locally: `bash scripts/ci_checks.sh` (the official validator runs only if `pip install skills-ref` is available).
-- Source reachability: `python3 scripts/check_sources.py` (also runs weekly in CI, report-only).
+- Source reachability: `python3 scripts/check_sources.py --strict --report sources-report.md`. The weekly CI run turns red when the field check fails or a `status: ok` source is broken (404/410, DNS failure, connection refused); 403, 429, 5xx, timeouts and certificate-chain problems become warning annotations. The report goes to the run summary and an artifact; nothing is edited and no issue is opened automatically.

@@ -86,4 +86,4 @@ sources: 0
 3. 工具储备条目：是否交给 topmind-capture（需用户确认）
 4. 信源候选：是否修改 `config/sources.yaml`（需用户确认）
 5. analyze 候选：请用户点名
-6. 出稿建议：短稿或快讯 → topmind-briefs，公众号 → topmind-wechat，其他 → topmind-write（不自动调用）
+6. 出稿建议：短稿或快讯 → topmind-briefs，公众号 → topmind-wechat-post，其他 → topmind-write（不自动调用）

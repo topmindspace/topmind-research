@@ -19,7 +19,7 @@
    - frontmatter：`source_type: ai-derived`、`as_of: YYYY-MM-DD`、`sources: <来源数>`、`produced_by: topmind-research/<mode>`。
 2. **记忆**：回执里给出不超过 5 行的结论摘要，问用户是否交给 topmind-memory 记下。用户不确认就不写。
 3. **信源变更**：研究中发现值得长期追踪的新信源、或现有信源失效，在回执里列为「信源候选」（名称、URL、验证方式、验证日期），由用户决定是否改 `config/sources.yaml`。
-4. **出稿**：短稿或快讯 → topmind-briefs（附已核验事实表），公众号排版与定稿 → topmind-wechat，其他长文 → topmind-write；对应技能未安装 → topmind-write。只在回执里建议，不自动调用。事实表按 `assets/templates/fact-sheet.md` 整理，写作技能直接引用表里的事实和来源，不再重复核验同一批事实。
+4. **出稿**：短稿或快讯 → topmind-briefs（附已核验事实表），公众号排版与定稿 → topmind-wechat-post，其他长文 → topmind-write；对应技能未安装 → topmind-write。只在回执里建议，不自动调用。事实表按 `assets/templates/fact-sheet.md` 整理，写作技能直接引用表里的事实和来源，不再重复核验同一批事实。
 
 ## 边界示例
 
@@ -27,4 +27,5 @@
 - 「这周有什么新工具」→ collect；「对比 A 和 B 两个工具的架构」→ analyze。
 - 「大家怎么评价这个新模型」→ last30days。
 - 「把我这周存的几篇论文笔记整理一下」→ topmind-organize。
-- 「用这张事实表出一篇快讯」→ 本技能不写稿，回执建议 topmind-briefs；「写成公众号文章发出去」→ 建议 topmind-wechat。
+- 「用这张事实表出一篇快讯」→ 本技能不写稿，回执建议 topmind-briefs；「写成公众号文章发出去」→ 建议 topmind-wechat-post（它只出排版稿和发布清单，发布由用户操作）。
+- 「把这份研究做成汇报 PPT / 可翻页 HTML」→ 本技能交付报告和事实表，回执建议 topmind-presentation。

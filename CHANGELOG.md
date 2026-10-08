@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.2.2 — 2026-10-08
+
+### 优化
+
+**出稿交接**
+
+- 公众号排版与定稿统一交给 `topmind-wechat-post`（topmind-writing-skills），与 topmind-skills 路由表同步；`SKILL.md`、`references/upgrade-rules.md`、周报模板、README、评测用例一并更新
+- `scripts/check_skill_refs.py` 增加检查：技能文件里再出现旧名 `topmind-wechat` 即报错
+- 写明出稿技能只产出稿件、发布由用户操作，本技能和下游技能都不代发
+
+**与 topmind-presentation 分工**
+
+- description 的 Do NOT 增加「把已有材料做成多页 HTML / PPTX 汇报 → topmind-presentation」
+- 「做一份 X 的研究报告」先在本技能收证据，做汇报材料只在回执建议 presentation，不自动链式调用；评测集补 a12、a13 两条
+
+**信源巡检**
+
+- `sources-weekly.yml` 去掉 `|| true`：字段检查不通过、或 `status: ok` 的信源失效（404/410、域名解析失败、连接被拒）时运行标红
+- 403、429、5xx、超时、证书链问题记为警告注释，不标红；完整报告写进运行摘要，并作为 artifact 保留 30 天
+- `scripts/check_sources.py` 增加 `--strict`、`--report`；超时单独记为 `Timeout`，不再和连接失败混在一起
+- 不自动改配置、不自动开 issue
+
+**安装**
+
+- README 写明本技能未发布到 npm，给出 skills CLI（`npx skills add topmindspace/topmind-research`）和 git clone 两种装法，并提示不要用 topmind-skills 的 pack 安装器
+- 根 `package.json` 增加 `files` 白名单（技能目录、README、LICENSE、CHANGELOG，排除 Python 缓存），为以后上 npm 做准备；本版不发布 npm
+
+**analyze**
+
+- 对比档位起子 agent 前先在回复里列计划表，用户可中途改
+- 每轮反思补洞的缺口清单写进状态文件「待办」，中断后可接着补
+
 ## 0.2.1 — 2026-10-08
 
 > **不兼容变更**：三个技能合并为单技能 `topmind-research`，collect / analyze 改为技能内的两种模式，`topmind-research-collect`、`topmind-research-analyze` 不再单独发布。

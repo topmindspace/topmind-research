@@ -17,6 +17,7 @@ FORBIDDEN = (
     (re.compile(r"topmind-research-(collect|analyze)\b"), "引用已合并的旧子技能"),
     (re.compile(r"topmind-tool-scout"), "引用外部技能 topmind-tool-scout"),
     (re.compile(r"wide_research"), "引用宿主未必提供的工具 wide_research"),
+    (re.compile(r"topmind-wechat(?!-post)\b"), "公众号出稿应交给 topmind-wechat-post（topmind-skills 的 topmind-wechat 已并入）"),
 )
 
 

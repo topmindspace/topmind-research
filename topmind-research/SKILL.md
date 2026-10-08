@@ -7,15 +7,16 @@ description: >-
   AI 周报 sweep、读论文、解读技术报告或 system card、对比模型或工具、核实融资额 / 估值 /
   数字口径、topmind-research。
   Do NOT use for 社区口碑与近 30 天讨论（→ last30days）、每日精选例行（→ TopStream每日精选）、
-  整理已存笔记或专题内总结（→ topmind-organize）、出稿发文（短稿或快讯 → topmind-briefs，
-  公众号排版与定稿 → topmind-wechat，其他长文 → topmind-write；未安装 → topmind-write）。
+  整理已存笔记或专题内总结（→ topmind-organize）、把已有材料做成多页 HTML / PPTX 汇报
+  （→ topmind-presentation）、出稿发文（短稿或快讯 → topmind-briefs，公众号排版与定稿 →
+  topmind-wechat-post，其他长文 → topmind-write；未安装 → topmind-write）。
 license: MIT
 compatibility: >-
   Needs web search and web fetch. Sub-agents and a browser are optional (falls back to
   sequential work and marks pages it cannot load). Python 3.9+ only for the optional
   scripts. Writes reports into a topmind workspace when one is present.
 metadata:
-  version: "0.2.1"
+  version: "0.2.2"
   author: TopMindSpace
   homepage: https://github.com/topmindspace/topmind-research#readme
   updated: "2026-10-08"
@@ -61,7 +62,8 @@ metadata:
 - 交付前必须过 `references/verification.md`，未通过不交付。
 - 每个事实句带 `[n]` 引用，文末来源表写明级别（T0–T3）、发布日期、访问日期。
 - 不自动写记忆、不自动改 `config/sources.yaml`、不自动升级深挖、不自动调用出稿技能：都只在回执里列为建议，用户确认后再做。
-- 出稿交接：短稿或快讯 → topmind-briefs（附已核验事实表），公众号排版与定稿 → topmind-wechat，其他长文 → topmind-write；对应技能未安装 → topmind-write。
+- 出稿交接：短稿或快讯 → topmind-briefs（附已核验事实表），公众号排版与定稿 → topmind-wechat-post，其他长文 → topmind-write；对应技能未安装 → topmind-write。出稿技能只产出稿件，发布由用户自己操作，本技能和下游技能都不代发。
+- 「做一份 X 的研究报告」：先在本技能把证据收齐核清；用户要做成可翻页的汇报材料时，回执建议 topmind-presentation，不自动链式调用。
 - 子 agent 并行上限 6 个，子 agent 不得再派子 agent（细则见 `references/analyze.md`）。
 - 推测与事实分开写，推测段落标「（推测）」。
 - 只用公开信息；不收录私人联系方式；配置文件里不放任何密钥。

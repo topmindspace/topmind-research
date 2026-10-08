@@ -85,10 +85,19 @@ analyze:
   - id: a10
     query: 把这份研究写成一篇公众号文章发出去
     expect: not-triggered
-    handoff: topmind-wechat
-    note: 出稿交接与 SKILL.md、references/upgrade-rules.md 一致：短稿或快讯 → topmind-briefs，公众号 → topmind-wechat，其他长文 → topmind-write，未安装 → topmind-write
+    handoff: topmind-wechat-post
+    note: 出稿交接与 SKILL.md、references/upgrade-rules.md 一致：短稿或快讯 → topmind-briefs，公众号 → topmind-wechat-post，其他长文 → topmind-write，未安装 → topmind-write
   - id: a11
     query: 用这张已核验事实表出一篇快讯
     expect: not-triggered
     handoff: topmind-briefs
     note: 本技能不写稿；回执建议 topmind-briefs 并附事实表，未安装 → topmind-write
+  - id: a12
+    query: 把这份已经写好的研究报告做成 10 页汇报 PPT
+    expect: not-triggered
+    handoff: topmind-presentation
+    note: 材料已齐、要的是可翻页 HTML / PPTX；本技能不做版式，回执建议 topmind-presentation
+  - id: a13
+    query: 做一份国产大模型 API 价格的研究报告，最后要能拿去汇报
+    expect: analyze
+    note: 先在本技能收证据、核数字，交付报告与事实表；做汇报材料只在回执建议 topmind-presentation，不自动链式调用

@@ -80,6 +80,65 @@ class RepoChecksTest(unittest.TestCase):
     def test_skill_refs(self):
         self.assertEqual(check_skill_refs.scan(), [])
 
+    def test_old_wechat_skill_name_is_forbidden(self):
+        def hits(line):
+            return [label for pat, label in check_skill_refs.FORBIDDEN if pat.search(line)]
+        self.assertTrue(hits("公众号排版与定稿 → topmind-wechat，其他长文"))
+        self.assertEqual(hits("公众号排版与定稿 → topmind-wechat-post，其他长文"), [])
+
+
+class SourcesWeeklyTest(unittest.TestCase):
+    ROWS = [
+        ("companies", "A", "blog", "https://a.example", "ok", "200"),
+        ("companies", "B", "blog", "https://b.example", "ok", "404"),
+        ("companies", "C", "rss", "https://c.example", "ok", "gaierror"),
+        ("companies", "D", "blog", "https://d.example", "ok", "403"),
+        ("media", "E", "url", "https://e.example", "ok", "Timeout"),
+        ("media", "F", "url", "https://f.example", "ok", "SSLError"),
+        ("companies", "G", "blog", "https://g.example", "blocked", "404"),
+    ]
+
+    def test_classify(self):
+        self.assertEqual(check_sources.classify("200"), "ok")
+        self.assertEqual(check_sources.classify("301"), "ok")
+        self.assertEqual(check_sources.classify("404"), "broken")
+        self.assertEqual(check_sources.classify("410"), "broken")
+        self.assertEqual(check_sources.classify("gaierror"), "broken")
+        for code in ("403", "429", "503", "Timeout", "SSLError", "RemoteDisconnected"):
+            self.assertEqual(check_sources.classify(code), "warn", code)
+
+    def test_summarize_only_counts_ok_sources(self):
+        broken, warn, expected = check_sources.summarize(self.ROWS)
+        self.assertEqual([r[1] for r in broken], ["B", "C"])
+        self.assertEqual([r[1] for r in warn], ["D", "E", "F"])
+        self.assertEqual([r[1] for r in expected], ["G"])
+
+    def test_report_lists_sections(self):
+        broken, warn, expected = check_sources.summarize(self.ROWS)
+        report = check_sources.render_report(broken, warn, expected, len(self.ROWS), ["x: 缺少 name"])
+        for word in ("## 失效", "## 警告", "## 预期打不开", "## 字段检查", "companies/B"):
+            self.assertIn(word, report)
+
+    def test_strict_exit_code(self):
+        rows = [("companies", "B", "blog", "https://b.example", "ok", "404")]
+        orig = check_sources.reachability
+        check_sources.reachability = lambda *a, **k: rows
+        try:
+            import contextlib, io, os
+            from unittest import mock
+            env = {k: v for k, v in os.environ.items() if k not in ("GITHUB_ACTIONS", "GITHUB_STEP_SUMMARY")}
+            with mock.patch.dict(os.environ, env, clear=True), contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(check_sources.main(["--strict"]), 2)
+                self.assertEqual(check_sources.main([]), 0)
+        finally:
+            check_sources.reachability = orig
+
+    def test_weekly_workflow_does_not_swallow_failures(self):
+        from _paths import ROOT
+        wf = (ROOT / ".github" / "workflows" / "sources-weekly.yml").read_text(encoding="utf-8")
+        self.assertNotIn("|| true", wf)
+        self.assertIn("--strict", wf)
+
 
 if __name__ == "__main__":
     unittest.main()

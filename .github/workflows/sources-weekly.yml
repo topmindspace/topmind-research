@@ -1,10 +1,17 @@
 name: sources-weekly
 
-# 每周巡检 sources.yaml 的可达性，只报告不阻断；结果在 Actions 日志里，需人工判断后再改配置。
+# 每周巡检 sources.yaml 的可达性。
+# - 字段检查不通过，或 status: ok 的信源失效（404/410、域名解析失败、连接被拒）：运行标红。
+# - 403/429/5xx/超时/证书链问题：记为警告注释，不标红（多半是反爬或临时故障）。
+# - 完整报告写进运行摘要，并作为 artifact 保留 30 天。
+# 不自动改配置、不自动开 issue；失效项需人工确认后再改 topmind-research/config/sources.yaml。
 on:
   schedule:
     - cron: "0 1 * * 1"
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   reachability:
@@ -15,4 +22,12 @@ jobs:
         with:
           python-version: "3.12"
       - name: Check sources
-        run: python3 scripts/check_sources.py || true
+        run: python3 scripts/check_sources.py --strict --report sources-report.md
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sources-report
+          path: sources-report.md
+          if-no-files-found: ignore
+          retention-days: 30
