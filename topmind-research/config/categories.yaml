@@ -1,5 +1,5 @@
 # 分类配置 · 改这里，不用改技能
-# 最后更新：2026-10-07
+# 最后更新：2026-10-08
 
 collect_categories:
   # collect 聚合输出的分类
@@ -19,4 +19,4 @@ analyze_types:
   - 横向对比
   - 数据分析
 
-# 预留：后续可加 collect 的评分权重、analyze 的输出模板名等
+# collect 的排序规则见 references/collect.md「排序」；输出模板在 assets/templates/

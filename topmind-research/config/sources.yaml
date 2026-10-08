@@ -1,141 +1,238 @@
 # 信息源配置 · 改这里，不用改技能
-# 维护说明：新增/下线来源只改本文件；status: tbd 表示待核实，核实后改为 ok
-# 最后更新：2026-10-07
+#
+# 字段说明
+#   blog / news / reports / url：人看的列表页或主页
+#   rss：可直接解析的 RSS/Atom 地址，collect 优先用它（scripts/collect_feeds.py）
+#   fetch：http = 普通请求可取；browser = 普通请求被拦（403/超时），需浏览器或 WebFetch
+#   status：ok = 已核验可用；tbd = 待核（地址打不开、不是官方新闻页或无法确认），collect 可读但须在周报「信源状态」里列出
+#   verified_at：最近一次人工或脚本核验日期
+#   note：核验备注
+#
+# 维护规则
+#   - 新增、下线、改地址只改本文件；技能运行时只提出候选，由用户确认后再改（见 references/upgrade-rules.md）
+#   - 核验命令：python3 scripts/check_sources.py（仓库根目录执行，只报告不改文件）
+#   - 社区信号（Hacker News、Reddit、X 讨论、YouTube 等）不在本文件维护，交给 last30days
+#
+# 最后更新：2026-10-08
 
 companies:
   # ---- 美国 ----
   - name: OpenAI
     country: US
-    blog: https://openai.com
+    blog: https://openai.com/news/
+    rss: https://openai.com/news/rss.xml
     reports: https://openai.com/research
+    fetch: browser
     status: ok
+    verified_at: "2026-10-08"
+    note: rss 普通请求 200；news、research 页面普通请求 403，需浏览器
   - name: Anthropic
     country: US
-    blog: https://www.anthropic.com
+    blog: https://www.anthropic.com/news
     reports: https://www.anthropic.com/research
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
   - name: Google DeepMind
     country: US
-    blog: https://deepmind.google
+    blog: https://deepmind.google/blog/
+    rss: https://blog.google/innovation-and-ai/models-and-research/google-deepmind/rss/
     reports: https://deepmind.google/research/
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
+    note: deepmind.google/discover/blog 跳转到 /blog/；rss 为 blog.google 旧地址跳转后的地址
   - name: xAI
     country: US
     blog: https://x.ai
     news: https://x.ai/news
+    fetch: browser
     status: ok
+    verified_at: "2026-10-08"
+    note: 带浏览器 UA 请求 200，不带 UA 403；页面标题显示 SpaceXAI，品牌或公司变更情况待核
   - name: Meta
     country: US
-    blog: https://ai.meta.com
-    status: ok
+    blog: https://ai.meta.com/blog/
+    fetch: browser
+    status: tbd
+    verified_at: "2026-10-08"
+    note: 待核。curl 与 WebFetch 均返回 400，未能确认页面内容
   - name: Microsoft
     country: US
-    blog: https://www.microsoft.com/en-us/research
+    blog: https://www.microsoft.com/en-us/research/blog/
+    rss: https://www.microsoft.com/en-us/research/feed/
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
   - name: Apple
     country: US
-    blog: https://machinelearning.apple.com
+    blog: https://machinelearning.apple.com/
+    rss: https://machinelearning.apple.com/rss.xml
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
   - name: Amazon
     country: US
-    blog: https://www.amazon.science
+    blog: https://www.amazon.science/blog
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
   - name: NVIDIA
     country: US
-    blog: https://blogs.nvidia.com
+    blog: https://blogs.nvidia.com/
+    rss: https://blogs.nvidia.com/feed/
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
   - name: Mistral AI
     country: FR
-    blog: https://mistral.ai
+    blog: https://mistral.ai/news
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
   - name: Cohere
     country: CA
-    blog: https://cohere.com
+    blog: https://cohere.com/blog
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
   - name: Perplexity
     country: US
     blog: https://www.perplexity.ai
+    fetch: browser
     status: tbd
+    verified_at: "2026-10-08"
+    note: 待核。主页与 hub/blog 普通请求 403 或超时，未确认新闻页地址
   - name: Hugging Face
     country: US
-    blog: https://huggingface.co
+    blog: https://huggingface.co/blog
+    rss: https://huggingface.co/blog/feed.xml
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
   # ---- 中国 ----
   - name: DeepSeek
     country: CN
     blog: https://www.deepseek.com
+    news: https://api-docs.deepseek.com/
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
+    note: 发布公告在 api-docs.deepseek.com 的 News 栏目（/news/ 下各篇）
   - name: 月之暗面/Kimi
     country: CN
     blog: https://www.moonshot.cn
+    news: https://www.kimi.com/
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
   - name: 智谱
     country: CN
     blog: https://www.zhipuai.cn
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
+    note: 跳转到 /zh，页面标题为 Z.ai；z.ai/blog 返回 404
   - name: 阿里/千问
     country: CN
     blog: https://qwen.ai
+    reports: https://qwen.ai/research
+    news: https://qwenlm.github.io/blog/
+    fetch: http
     status: ok
-  - name: 字节跳动/豆包
+    verified_at: "2026-10-08"
+  - name: 字节跳动/Seed
     country: CN
-    blog: https://www.doubao.com
-    status: tbd
+    blog: https://seed.bytedance.com/
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
+    note: 原地址 doubao.com 跳转到对话产品页，不含新闻；改为 ByteDance Seed 官网（跳转到 /en/）
   - name: 腾讯/混元
     country: CN
     blog: https://hunyuan.tencent.com
-    status: tbd
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
   - name: 百度/文心
     country: CN
     blog: https://yiyan.baidu.com
+    fetch: http
     status: tbd
+    verified_at: "2026-10-08"
+    note: 待核。跳转到 wenxin.baidu.com 产品页，未找到官方新闻或技术博客列表页
   - name: 小米/MiMo
     country: CN
-    blog: https://www.mi.com
-    status: tbd
+    blog: https://mimo.xiaomi.com/
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
+    note: 原地址 mi.com 按地区跳转到商城；改为 MiMo 官网
   - name: MiniMax
     country: CN
-    blog: https://www.minimax.io
+    blog: https://www.minimax.io/news
+    fetch: http
     status: ok
+    verified_at: "2026-10-08"
   - name: 阶跃星辰
     country: CN
     blog: https://www.stepfun.com
-    status: tbd
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
+    note: 主页可访问；新闻列表页地址未确认
   - name: 零一万物
     country: CN
     blog: https://www.01.ai
-    status: tbd
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
+    note: 主页可访问；新闻列表页地址未确认
   - name: 百川
     country: CN
     blog: https://www.baichuan-ai.com
-    status: tbd
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
+    note: 主页可访问；新闻列表页地址未确认
   - name: 华为/盘古
     country: CN
     blog: https://www.huawei.com
+    fetch: http
     status: tbd
+    verified_at: "2026-10-08"
+    note: 待核。集团主页，未找到盘古大模型的官方新闻页
   - name: 商汤
     country: CN
     blog: https://www.sensetime.com
+    fetch: http
     status: tbd
+    verified_at: "2026-10-08"
+    note: 待核。主页按地区跳转，未确认中文新闻页地址
 
 people:
-  # 关键人物公开动态（X 为主）；x_handle 待核实的标 tbd，核实后填
+  # 关键人物公开动态。collect 不直接抓 X，人物动态交给 last30days 或人工查看
+  # x_handle 只填通过 X 官方接口按用户名查到、且简介能对上身份的账号；确认不了的保留 TBD
   - name: Sam Altman
     org: OpenAI
     role: CEO
-    x_handle: TBD
+    x_handle: sama
+    x_verified_at: "2026-10-08"
   - name: Dario Amodei
     org: Anthropic
     role: CEO
-    x_handle: TBD
+    x_handle: DarioAmodei
+    x_verified_at: "2026-10-08"
   - name: Demis Hassabis
     org: Google DeepMind
     role: CEO
-    x_handle: TBD
+    x_handle: demishassabis
+    x_verified_at: "2026-10-08"
   - name: Elon Musk
     org: xAI
     role: Founder
     x_handle: elonmusk
+    x_verified_at: "2026-10-08"
   - name: 梁文锋
     org: DeepSeek
     role: Founder
@@ -159,7 +256,8 @@ people:
   - name: 李开复
     org: 零一万物
     role: Founder
-    x_handle: TBD
+    x_handle: kaifulee
+    x_verified_at: "2026-10-08"
   - name: 王小川
     org: 百川
     role: Founder
@@ -167,15 +265,19 @@ people:
   - name: Arthur Mensch
     org: Mistral AI
     role: CEO
-    x_handle: TBD
+    x_handle: arthurmensch
+    x_verified_at: "2026-10-08"
   - name: 黄仁勋
     org: NVIDIA
     role: CEO
-    x_handle: TBD
+    x_handle: JensenHuang
+    x_verified_at: "2026-10-08"
+    note: 账号创建于 2026-06；@nvidia 官方账号发帖以 @JensenHuang 称呼 CEO
   - name: 唐杰
     org: 智谱
     role: 董事长/科学家
-    x_handle: TBD
+    x_handle: jietang
+    x_verified_at: "2026-10-08"
   - name: 周靖人
     org: 阿里
     role: 通义负责人
@@ -186,65 +288,117 @@ people:
     x_handle: TBD
 
 media:
-  # 第三方科技媒体（传闻与转述只作线索，不作定论）
+  # 第三方科技媒体（T1/T2；传闻与转述只作线索，不作定论）
   - name: 机器之心
     url: https://www.jiqizhixin.com
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
   - name: 量子位
     url: https://www.qbitai.com
+    rss: https://www.qbitai.com/feed
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
   - name: 新智元
-    url: https://www.51cto.com
-    status: tbd
+    url: https://aiera.com.cn/
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
+    note: 原地址 51cto.com 不是新智元站点；aiera.com.cn 页面标题为「新智元官网」
   - name: TechCrunch
-    url: https://techcrunch.com
+    url: https://techcrunch.com/category/artificial-intelligence/
+    rss: https://techcrunch.com/category/artificial-intelligence/feed/
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
   - name: The Verge
-    url: https://www.theverge.com
+    url: https://www.theverge.com/ai-artificial-intelligence
+    rss: https://www.theverge.com/rss/ai-artificial-intelligence/index.xml
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
   - name: 晚点 LatePost
     url: https://www.latepost.com
+    fetch: browser
     status: tbd
+    verified_at: "2026-10-08"
+    note: 待核。curl 与 WebFetch 均超时
 
 benchmarks:
   # 模型榜单与评测（厂商自报成绩只作线索，以第三方实测为准）
   - name: Artificial Analysis
     url: https://artificialanalysis.ai
-    status: tbd
+    fetch: browser
+    status: ok
+    verified_at: "2026-10-08"
+    note: WebFetch 可读；curl 超时
   - name: LMArena
-    url: TBD
-    status: tbd
+    url: https://lmarena.ai/leaderboard
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
+    note: 跳转到 arena.ai/leaderboard
 
 newsletters:
   # 行业 newsletter（聚合线索用）
   - name: TLDR AI
-    url: https://tldr.tech
-    status: tbd
+    url: https://tldr.tech/ai
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
   - name: The Batch
     url: https://www.deeplearning.ai/the-batch/
-    status: tbd
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
 
 tool_sources:
+  # 工具与开源项目发现。Hacker News 已移出，交给 last30days
   - name: GitHub Trending
     url: https://github.com/trending
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
   - name: Hugging Face Trending
-    url: https://huggingface.co
-    status: tbd
+    url: https://huggingface.co/models?sort=trending
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
   - name: Product Hunt
     url: https://www.producthunt.com
-    status: tbd
-  - name: Hacker News
-    url: https://news.ycombinator.com
-    status: tbd
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
 
 paper_sources:
+  # Papers with Code 已移出：原站跳转到 Hugging Face Papers trending，与下方条目重复
   - name: arXiv cs.CL
     url: https://arxiv.org/list/cs.CL/recent
+    rss: https://rss.arxiv.org/rss/cs.CL
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
   - name: arXiv cs.AI
     url: https://arxiv.org/list/cs.AI/recent
+    rss: https://rss.arxiv.org/rss/cs.AI
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
   - name: arXiv cs.LG
     url: https://arxiv.org/list/cs.LG/recent
+    rss: https://rss.arxiv.org/rss/cs.LG
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
   - name: Hugging Face Papers
     url: https://huggingface.co/papers
-  - name: Papers with Code
-    url: https://paperswithcode.com
-    status: tbd
+    trending: https://huggingface.co/papers/trending
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
   - name: Semantic Scholar
     url: https://www.semanticscholar.org
-    status: tbd
+    fetch: http
+    status: ok
+    verified_at: "2026-10-08"
