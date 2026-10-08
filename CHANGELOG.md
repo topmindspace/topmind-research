@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### 优化
+
+- GitHub Actions 改用 Node 24 运行时的版本：`actions/checkout` v4 → v7、`actions/setup-python` v5 → v7、`actions/upload-artifact` v4 → v7（ci 与 sources-weekly）。
+- `runs-on` 由 `ubuntu-latest` 固定为 `ubuntu-24.04`：GitHub 在 2026-10-19 至 11-19 期间把 `ubuntu-latest` 逐步切到 Ubuntu 26.04，先停在当前已验证的镜像，切 26.04 另行验证后再改。
+
 ## 0.2.2 — 2026-10-08
 
 ### 优化
