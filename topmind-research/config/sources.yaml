@@ -367,9 +367,10 @@ tool_sources:
     verified_at: "2026-10-08"
   - name: Product Hunt
     url: https://www.producthunt.com
-    fetch: http
+    fetch: browser
     status: ok
     verified_at: "2026-10-08"
+    note: curl 带浏览器 UA 返回 200；Python urllib 返回 403，按需浏览器处理
 
 paper_sources:
   # Papers with Code 已移出：原站跳转到 Hugging Face Papers trending，与下方条目重复

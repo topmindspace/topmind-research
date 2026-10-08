@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel><title>Example News</title>
+<item><title>Model A released</title><link>https://Example.com/news/model-a/?utm_source=rss&amp;id=7#top</link><pubDate>Tue, 06 Oct 2026 10:00:00 GMT</pubDate></item>
+<item><title>Old post</title><link>https://example.com/news/old</link><pubDate>Mon, 21 Sep 2026 10:00:00 GMT</pubDate></item>
+<item><title>No date post</title><link>https://example.com/news/undated</link></item>
+</channel></rss>

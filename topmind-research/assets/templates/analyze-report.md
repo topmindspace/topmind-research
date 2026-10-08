@@ -44,6 +44,8 @@ sources: 0
 ## 来源
 
 [1] 标题 · 发布方 · T0 · 发布 YYYY-MM-DD · 访问 YYYY-MM-DD · URL
+[2] 标题 · 发布方 · T1 · 发布 YYYY-MM-DD · 访问 YYYY-MM-DD · URL
+[3] 标题 · 发布方 · T0 · 发布日期不详 · 访问 YYYY-MM-DD · URL
 
 ## 核验记录
 
