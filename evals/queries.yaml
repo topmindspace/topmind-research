@@ -1,0 +1,79 @@
+# 触发与产出评测用例。人工或评测框架逐条运行，按 evals/rubric.md 打分。
+# expect：collect / analyze / not-triggered（应交给其他技能）；handoff 写应接手的技能。
+# 截至 2026-10-08 尚未跑过，结果记录在 evals/results/（目录按需创建）。
+
+collect:
+  - id: c01
+    query: 这周大厂有什么新动态？出一份周报素材
+    expect: collect
+  - id: c02
+    query: 汇总一下 10 月以来中美 AI 公司的模型发布
+    expect: collect
+  - id: c03
+    query: 帮我 sweep 一下官方信源，从上次 watermark 开始
+    expect: collect
+  - id: c04
+    query: 最近有哪些值得关注的开源 AI 工具？
+    expect: collect
+  - id: c05
+    query: 国内大模型厂商这两周发了什么？
+    expect: collect
+  - id: c06
+    query: 扫一遍本周 arXiv 和 HF Papers 的热门论文
+    expect: collect
+  - id: c07
+    query: 扫一遍动态，值得细看的再深挖
+    expect: collect
+    note: 先 collect，列 analyze 候选，等用户点名，不得自动深挖
+  - id: c08
+    query: X 上大家怎么评价最新的模型发布？
+    expect: not-triggered
+    handoff: last30days
+  - id: c09
+    query: 出今天的每日精选
+    expect: not-triggered
+    handoff: TopStream每日精选
+  - id: c10
+    query: 把我笔记库里关于 Agent 的笔记做个总结
+    expect: not-triggered
+    handoff: topmind-organize
+
+analyze:
+  - id: a01
+    query: 帮我精读这篇论文 https://arxiv.org/abs/1706.03762 ，讲清楚方法和局限
+    expect: analyze
+  - id: a02
+    query: 解读一下最新模型的 system card，安全评测部分重点看
+    expect: analyze
+  - id: a03
+    query: 对比三家主流模型 API 的定价和上下文长度
+    expect: analyze
+    note: 对比档位，需写清对比口径
+  - id: a04
+    query: 开源权重模型和闭源模型在编程基准上的差距现在有多大？
+    expect: analyze
+    note: 需区分厂商口径与第三方评测
+  - id: a05
+    query: 做一份 2026 年 AI Agent 框架格局的综述
+    expect: analyze
+    note: 综述档位，必须先给研究简报等用户确认
+  - id: a06
+    query: 这家公司的融资额到底是多少？各家报道不一样
+    expect: analyze
+    note: 第三方数字，需 2 个独立来源并列不一致口径
+  - id: a07
+    query: 继续昨天没做完的那个研究
+    expect: analyze
+    note: 读状态文件续跑
+  - id: a08
+    query: 用 Gemini Deep Research 跑一下这个题目
+    expect: analyze
+    note: 读 backend-gemini.md，先确认费用与密钥
+  - id: a09
+    query: 研究完把结论记到记忆里
+    expect: analyze
+    note: 用户明确要求才写记忆；未要求时只在回执里建议
+  - id: a10
+    query: 把这份研究写成一篇公众号文章发出去
+    expect: not-triggered
+    handoff: topmind-wechat-post
