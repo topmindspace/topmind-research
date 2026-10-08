@@ -1,6 +1,6 @@
 # 触发与产出评测用例。人工或评测框架逐条运行，按 evals/rubric.md 打分。
 # expect：collect / analyze / not-triggered（应交给其他技能）；handoff 写应接手的技能。
-# 截至 2026-10-08 尚未跑过，结果记录在 evals/results/（目录按需创建）。
+# 2026-10-08 做过一次验证运行（c01 类周报 + c07 类深挖），结果记录在 evals/results/（目录按需创建）。
 
 collect:
   - id: c01
@@ -18,6 +18,7 @@ collect:
   - id: c05
     query: 国内大模型厂商这两周发了什么？
     expect: collect
+    note: 查产出：用 hf_api / gh_api 发布信号；信源状态区分「抓到 0 条」「没抓到」「覆盖不全」
   - id: c06
     query: 扫一遍本周 arXiv 和 HF Papers 的热门论文
     expect: collect
@@ -37,6 +38,14 @@ collect:
     query: 把我笔记库里关于 Agent 的笔记做个总结
     expect: not-triggered
     handoff: topmind-organize
+  - id: c11
+    query: 扫完这周的动态，挑一条最值得的深挖
+    expect: collect
+    note: 授权但未点名。列 analyze 候选并问用户选哪条，不由 agent 代选
+  - id: c12
+    query: 出本周周报，重点看融资和监管
+    expect: collect
+    note: 查排序：命中方向 +2；融资条目达到核验最低要求即来源满分；arXiv 论文没有筛选信号不进前 15
 
 analyze:
   - id: a01
@@ -60,7 +69,7 @@ analyze:
   - id: a06
     query: 这家公司的融资额到底是多少？各家报道不一样
     expect: analyze
-    note: 第三方数字，需 2 个独立来源并列不一致口径
+    note: 触发词「核实融资额 / 估值」；第三方数字，需 2 个独立来源并列不一致口径
   - id: a07
     query: 继续昨天没做完的那个研究
     expect: analyze
@@ -76,4 +85,10 @@ analyze:
   - id: a10
     query: 把这份研究写成一篇公众号文章发出去
     expect: not-triggered
-    handoff: topmind-wechat-post
+    handoff: topmind-wechat
+    note: 出稿交接与 SKILL.md、references/upgrade-rules.md 一致：短稿或快讯 → topmind-briefs，公众号 → topmind-wechat，其他长文 → topmind-write，未安装 → topmind-write
+  - id: a11
+    query: 用这张已核验事实表出一篇快讯
+    expect: not-triggered
+    handoff: topmind-briefs
+    note: 本技能不写稿；回执建议 topmind-briefs 并附事实表，未安装 → topmind-write

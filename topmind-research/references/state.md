@@ -5,9 +5,11 @@
 | 环境 | analyze 状态目录 | collect watermark |
 |---|---|---|
 | topmind 工作区（根目录有 `topmind.yaml` 或 `.topmind/`） | `.topmind/research/{slug}/` | `.topmind/research/collect-watermark.md` |
-| 其他 | 当前工作目录下 `research/{slug}/` | `research/collect-watermark.md` |
+| 其他 | 当前工作目录下 `research/{slug}/` | `~/.topmind-research/collect-watermark.md`（固定位置，换目录运行也能找到）；用户指定了位置就用用户的 |
 
 `{slug}`：日期 + 题目关键词，如 `2026-10-08-moe-progress`。
+
+非工作区运行时，回执里写明 watermark 的实际路径。旧版本写在 `research/collect-watermark.md` 的，首次运行时读出来沿用，再写到新位置。
 
 ## analyze 状态目录内容
 
@@ -18,7 +20,7 @@
 
 ```markdown
 ---
-watermark: 2026-10-07T18:00:00+08:00   # 上次收录条目中最新的发布时间
+watermark: 2026-10-07T18:00:00+08:00   # 上次收录条目中最新的发布时间（UTC+8，用发布时间，不用更新时间）
 last_run: 2026-10-08T09:30:00+08:00
 scope: all                              # all 或用户指定的方向
 ---

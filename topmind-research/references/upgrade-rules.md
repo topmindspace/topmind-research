@@ -6,6 +6,7 @@
 
 1. collect 周报末尾列出「analyze 候选」，最多 3 条，每条写理由：用户指定的方向 / 新模型或新论文发布 / 重大融资并购或高管变动 / 排序前 3 且有 T0 原文。
 2. 用户点名某条后才进入 analyze。用户在请求里已明确说「扫完把 X 深挖一下」时，视为已确认。
+   用户授权深挖但没有点名（「扫完挑一条最值得的深挖」）：不由 agent 代选。周报交付时列出 analyze 候选并问用户选哪条，用户回复后再进 analyze（与 topmind-skills 路由表「未经用户点名不自动深挖」一致）。
 3. 交接内容：原始条目、已收集的来源链接、排序得分与理由。analyze 不重复抓取 collect 已拿到的来源，只补缺。
 
 ## 沉淀（collect / analyze 完成后）
@@ -18,7 +19,7 @@
    - frontmatter：`source_type: ai-derived`、`as_of: YYYY-MM-DD`、`sources: <来源数>`、`produced_by: topmind-research/<mode>`。
 2. **记忆**：回执里给出不超过 5 行的结论摘要，问用户是否交给 topmind-memory 记下。用户不确认就不写。
 3. **信源变更**：研究中发现值得长期追踪的新信源、或现有信源失效，在回执里列为「信源候选」（名称、URL、验证方式、验证日期），由用户决定是否改 `config/sources.yaml`。
-4. **出稿**：用户要发文时，把事实表（`assets/templates/fact-sheet.md`）交给 topmind-briefs / topmind-wechat-post / topmind-x-article，写作技能直接引用表里的事实和来源，不再重复核验同一批事实。
+4. **出稿**：短稿或快讯 → topmind-briefs（附已核验事实表），公众号排版与定稿 → topmind-wechat，其他长文 → topmind-write；对应技能未安装 → topmind-write。只在回执里建议，不自动调用。事实表按 `assets/templates/fact-sheet.md` 整理，写作技能直接引用表里的事实和来源，不再重复核验同一批事实。
 
 ## 边界示例
 
@@ -26,3 +27,4 @@
 - 「这周有什么新工具」→ collect；「对比 A 和 B 两个工具的架构」→ analyze。
 - 「大家怎么评价这个新模型」→ last30days。
 - 「把我这周存的几篇论文笔记整理一下」→ topmind-organize。
+- 「用这张事实表出一篇快讯」→ 本技能不写稿，回执建议 topmind-briefs；「写成公众号文章发出去」→ 建议 topmind-wechat。
