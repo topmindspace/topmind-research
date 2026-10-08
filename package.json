@@ -1,4 +1,8 @@
 {
+  "author": "TopMindSpace",
+  "bugs": {
+    "url": "https://github.com/topmindspace/topmind-research/issues"
+  },
   "description": "AI 行业情报与研究技能：collect 扫官方信源出周报素材，analyze 精读论文与技术报告出带来源的研究报告",
   "files": [
     "topmind-research/",
@@ -10,11 +14,23 @@
     "CHANGELOG.md"
   ],
   "homepage": "https://github.com/topmindspace/topmind-research#readme",
+  "keywords": [
+    "agent-skills",
+    "ai-skills",
+    "ai-research",
+    "ai-news",
+    "weekly-digest",
+    "paper-reading",
+    "fact-check"
+  ],
   "license": "MIT",
   "name": "@topmindspace/topmind-research",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/topmindspace/topmind-research.git"
   },
-  "version": "0.2.2"
+  "version": "0.2.3"
 }

@@ -12,7 +12,11 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
+      # npm 包内容检查（scripts/check_npm_pack.py）需要 npm
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
       - name: Install skills-ref
-        run: pip install skills-ref
+        run: pip install skills-ref==0.1.1
       - name: Run checks
         run: bash scripts/ci_checks.sh

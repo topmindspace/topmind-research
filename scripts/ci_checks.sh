@@ -22,6 +22,13 @@ run "$PY" topmind-research/scripts/check_citations.py --allow-placeholders \
   topmind-research/assets/templates/fact-sheet.md
 run "$PY" -m unittest discover -s tests
 
+if command -v npm >/dev/null 2>&1; then
+  run "$PY" scripts/check_npm_pack.py
+else
+  echo "==> 跳过 npm 包内容检查：未安装 npm"
+  echo
+fi
+
 AS="${AGENTSKILLS:-$(command -v agentskills || true)}"
 if [ -n "$AS" ]; then
   run "$AS" validate topmind-research

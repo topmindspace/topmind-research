@@ -9,9 +9,21 @@ AI 行业情报与研究技能（单技能，两种模式）。[English](README.
 
 ## 安装
 
-本技能**没有发布到 npm**，`npm i @topmindspace/topmind-research` 会返回 404。技能目录是 `topmind-research/`，目录内自包含，不依赖仓库根的其他文件。两种装法任选：
+技能目录是 `topmind-research/`，目录内自包含，不依赖仓库根的其他文件。npm 包 [`@topmindspace/topmind-research`](https://www.npmjs.com/package/@topmindspace/topmind-research) 自 0.2.3 起发布（0.2.2 及更早没有 npm 包，用方式二到方式四）。四种装法任选：
 
-**方式一：skills CLI（[vercel-labs/skills](https://github.com/vercel-labs/skills)，需要 Node.js 22+）**
+**方式一：npm 安装后复制进技能目录**
+
+只执行 `npm i` 会把包装进 `node_modules`，宿主找不到，要再复制一次：
+
+```bash
+npm i @topmindspace/topmind-research
+# Claude Code
+cp -r node_modules/@topmindspace/topmind-research/topmind-research ~/.claude/skills/
+# Codex
+cp -r node_modules/@topmindspace/topmind-research/topmind-research ~/.codex/skills/
+```
+
+**方式二：skills CLI（[vercel-labs/skills](https://github.com/vercel-labs/skills)，需要 Node.js 22+）**
 
 ```bash
 # 装到当前项目（.claude/skills/ 等，按所选宿主）
@@ -22,7 +34,15 @@ npx skills add topmindspace/topmind-research --agent claude-code -g
 
 CLI 只会复制 `topmind-research/` 这个技能目录，仓库根的 `evals/`、`tests/`、`scripts/` 不会进宿主。
 
-**方式二：git clone 后复制**
+**方式三：GitHub Release zip**
+
+从 [Releases](https://github.com/topmindspace/topmind-research/releases) 下载 `topmind-research.zip`，zip 顶层就是 `topmind-research/`，解压到宿主技能目录即可：
+
+```bash
+unzip topmind-research.zip -d ~/.claude/skills/
+```
+
+**方式四：git clone 后复制**
 
 ```bash
 git clone --depth 1 https://github.com/topmindspace/topmind-research.git
@@ -32,7 +52,7 @@ cp -r topmind-research/topmind-research ~/.claude/skills/
 cp -r topmind-research/topmind-research ~/.codex/skills/
 ```
 
-升级时先删掉宿主里旧的 `topmind-research/` 再复制；改过 `config/sources.yaml` 的先备份再合并回去。
+升级时先删掉宿主里旧的 `topmind-research/` 再复制或解压；改过 `config/sources.yaml` 的先备份再合并回去。
 
 不要用 topmind-skills 的 pack 安装器装本仓库：它会把仓库根的 `evals/`、`LICENSE`、`README.md` 一并铺进技能目录。
 

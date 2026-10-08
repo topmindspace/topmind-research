@@ -11,9 +11,21 @@ Outputs are written in Chinese by default.
 
 ## Install
 
-This skill is **not published to npm**; `npm i @topmindspace/topmind-research` returns 404. The skill directory is `topmind-research/` and it is self-contained. Pick one:
+The skill directory is `topmind-research/` and it is self-contained. The npm package [`@topmindspace/topmind-research`](https://www.npmjs.com/package/@topmindspace/topmind-research) is published from 0.2.3 on (0.2.2 and earlier have no npm package; use options 2–4). Pick one:
 
-**Option 1: skills CLI ([vercel-labs/skills](https://github.com/vercel-labs/skills), Node.js 22+)**
+**Option 1: npm, then copy into your skills folder**
+
+`npm i` alone only puts the package in `node_modules`, where your agent will not find it. Copy it over:
+
+```bash
+npm i @topmindspace/topmind-research
+# Claude Code
+cp -r node_modules/@topmindspace/topmind-research/topmind-research ~/.claude/skills/
+# Codex
+cp -r node_modules/@topmindspace/topmind-research/topmind-research ~/.codex/skills/
+```
+
+**Option 2: skills CLI ([vercel-labs/skills](https://github.com/vercel-labs/skills), Node.js 22+)**
 
 ```bash
 # project scope (.claude/skills/ etc., depending on the agent)
@@ -24,7 +36,15 @@ npx skills add topmindspace/topmind-research --agent claude-code -g
 
 The CLI copies only the `topmind-research/` skill directory; the repo-level `evals/`, `tests/` and `scripts/` stay out of your host.
 
-**Option 2: git clone and copy**
+**Option 3: GitHub Release zip**
+
+Download `topmind-research.zip` from [Releases](https://github.com/topmindspace/topmind-research/releases). Its top level is `topmind-research/`, so unzip it straight into your skills folder:
+
+```bash
+unzip topmind-research.zip -d ~/.claude/skills/
+```
+
+**Option 4: git clone and copy**
 
 ```bash
 git clone --depth 1 https://github.com/topmindspace/topmind-research.git
@@ -34,7 +54,7 @@ cp -r topmind-research/topmind-research ~/.claude/skills/
 cp -r topmind-research/topmind-research ~/.codex/skills/
 ```
 
-To upgrade, delete the old `topmind-research/` in your host first; back up `config/sources.yaml` if you edited it.
+To upgrade, delete the old `topmind-research/` in your host first, then copy or unzip; back up `config/sources.yaml` if you edited it.
 
 Do not use the topmind-skills pack installer for this repo: it copies the repo-level `evals/`, `LICENSE` and `README.md` into the skill folder.
 
