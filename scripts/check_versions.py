@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""检查版本号一致：根 package.json、topmind-research/package.json、SKILL.md 的 metadata.version、CHANGELOG 最近一个已发布版本。
+"""检查版本号一致：根 package.json、topmind-research/package.json、SKILL.md 的 metadata.version、
+scripts/collect_feeds.py 的 VERSION（写进抓取 UA）、CHANGELOG 最近一个已发布版本。
 
 只用 Python 标准库。CHANGELOG 的「Unreleased」段不参与比较。
 """
@@ -28,11 +29,17 @@ def changelog_version(text: str) -> str | None:
     return None
 
 
+def script_version(text: str) -> str | None:
+    m = re.search(r'^VERSION\s*=\s*"([^"]+)"', text, re.M)
+    return m.group(1) if m else None
+
+
 def collect() -> dict[str, str | None]:
     return {
         "package.json": json.loads((ROOT / "package.json").read_text(encoding="utf-8")).get("version"),
         "topmind-research/package.json": json.loads((SKILL / "package.json").read_text(encoding="utf-8")).get("version"),
         "topmind-research/SKILL.md metadata.version": skill_version((SKILL / "SKILL.md").read_text(encoding="utf-8")),
+        "topmind-research/scripts/collect_feeds.py VERSION": script_version((SKILL / "scripts" / "collect_feeds.py").read_text(encoding="utf-8")),
         "CHANGELOG.md 最近已发布版本": changelog_version((ROOT / "CHANGELOG.md").read_text(encoding="utf-8")),
     }
 

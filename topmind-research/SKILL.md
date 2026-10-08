@@ -15,7 +15,7 @@ compatibility: >-
   sequential work and marks pages it cannot load). Python 3.9+ only for the optional
   scripts. Writes reports into a topmind workspace when one is present.
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
   author: TopMindSpace
   homepage: https://github.com/topmindspace/topmind-research#readme
   updated: "2026-10-08"
