@@ -7,14 +7,13 @@
 | 主题扫 | 给主题+周期 | "这周大模型有什么新发布" |
 | 公司扫 | 给公司名单+周期 | "扫一下 DeepSeek、月之暗面、MiniMax 这周动态" |
 | 分类扫 | 按 `categories.yaml` 的分类 | "这周融资并购汇总" |
-| 增量扫（默认） | 只收上次 sweep 之后的新内容 | 周期任务自动用 |
+| 增量扫（默认） | 只收上次 watermark 之后的新内容 | 周期任务默认用 |
 
-## 增量 sweep（watermark）机制
+## 增量 sweep（watermark）
 
-- 每次 sweep 输出 frontmatter 带 `watermark: <ISO时间>`（本次抓到的最新信息时间）。
-- 下次执行时读入上次的 watermark，只收该时间之后的内容，不重复推旧闻。
-- watermark 由执行 agent 保管（如 cron 的 hidden_files），技能只定义格式，不硬编码位置。
-- 用户要求"全量重扫"时忽略 watermark。
+- 每次 collect 结束时更新 watermark（本次收录条目中最新的发布时间），下次只收该时间之后的内容。
+- 存放位置和格式见 `references/state.md`。
+- 用户要求「全量重扫」时忽略 watermark。
 
 ## analyze 输入方式
 
@@ -22,7 +21,7 @@
 |---|---|
 | 链接 | 论文/报告/新闻链接，直接精读 |
 | 文件 | PDF、Markdown、文本粘贴 |
-| 主题 | "分析一下 MoE 架构的最新进展"——先由 collect 找齐资料再深挖 |
+| 主题 | 「分析一下 MoE 架构的最新进展」——先写研究简报，按投入档位决定是否需要用户确认计划 |
 | 对比 | 给 2+ 个对象，说明对比口径（时间/版本/测试集） |
 
 ## analyze 输出：置信度标注
