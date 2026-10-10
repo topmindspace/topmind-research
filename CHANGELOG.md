@@ -106,7 +106,7 @@
 - 晚点 LatePost：改为 www 子域列表页，经 `list_api`（POST get-news-data）读取；证书链到 Let's Encrypt 新根 ISRG Root YR，记 `ca_root`，缺根证书时用 `--ca-bundle` 追加
 - 中国厂商：千问、混元、MiniMax、阶跃、百川标 `fetch: js`；DeepSeek、月之暗面、智谱、千问、字节 Seed、腾讯、小米 MiMo、MiniMax、阶跃、零一万物、百川补 Hugging Face 组织 API 与 GitHub 组织仓库 API（均于 2026-10-08 请求验证，note 写明最新一条日期）；DeepSeek 新闻改为 /news/ 并补 sitemap
 - 公司官方 X 账号：@deepseek_ai、@Kimi_Moonshot、@Zai_org、@MiniMax_AI、@StepFun_ai、@Alibaba_Qwen、@BaichuanAI、@ByteDanceSeed_、@ErnieforDevs、@SenseTime_AI、@perplexity_ai、@AIatMeta
-- 人物：梁文锋 `x_handle: null`（本人无 X 账号，@LiangWenfeng_ 为仿冒号，附 Reuters、SCMP 依据）；姜大昕保持 TBD，记候选 @DaxinJiang（未确认）；杨植麟、张鹏、闫俊杰、王小川、周靖人、朱文佳保持 TBD，note 写明用哪个公司官方号代替，王小川记微博；新增 `x_status` 字段
+- 人物：梁文锋 `x_handle: null`（未找到可核实的本人账号，改用公司官方号，附 Reuters、SCMP 依据）；姜大昕保持 TBD，暂用公司官方号（待官方渠道确认）；杨植麟、张鹏、闫俊杰、王小川、周靖人、朱文佳保持 TBD，note 写明用哪个公司官方号代替，王小川记微博；新增 `x_status` 字段
 - 论文源：移出 Semantic Scholar（只有主页，无可扫列表）；HF Papers 补每日论文 API 作筛选信号；Hacker News 交给 last30days，Papers with Code 跳转到 HF Papers，移出
 - 千问当前官方博客入口未能确认（qwen.ai 为前端渲染，其列表接口最新到 2025-12-23，qwenlm.github.io/blog 停在 2025-09-23），暂不替换，发布信号以 HF / GitHub / X 为准
 - 此前已完成：新智元地址更正为 aiera.com.cn；字节改为 Seed 官网；小米改为 MiMo 官网；LMArena 补地址；人物 X 账号补全 7 个（经 X 接口核对）

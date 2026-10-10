@@ -48,7 +48,7 @@ def _check_people(item: dict, where: str) -> list[str]:
     if x_status is not None and x_status not in X_STATUSES:
         errors.append(f"{where}: x_status 应为 {' / '.join(X_STATUSES)}")
     if handle is None:
-        # null = 已核实本人没有 X 账号（或只有仿冒号），必须写依据
+        # null = 已核实本人没有 X 账号（或无法核实本人账号），必须写依据
         if x_status != "none" or not item.get("note"):
             errors.append(f"{where}: x_handle 为 null 时须写 x_status: none 和 note（依据）")
     elif handle == "TBD":
