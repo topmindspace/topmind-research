@@ -275,8 +275,8 @@ companies:
 people:
   # 关键人物公开动态。collect 不直接抓 X，人物动态交给 last30days（X 已配置时才有用）或人工查看
   # x_handle 只填通过 X 官方接口按用户名查到、且简介能对上身份的账号；确认不了的保留 TBD；
-  #   有可信报道说本人不用 X 的写 null（并写 x_status: none 和依据）
-  # x_status：confirmed = 已确认 / none = 本人没有账号 / unverified = 未确定 / candidate = 有候选但未确认
+  #   有可信依据说明没有可核实的本人账号的写 null（并写 x_status: none 和依据）
+  # x_status：confirmed = 已确认 / none = 未找到可核实的本人账号 / unverified = 未确定 / candidate = 有候选但未确认
   # 没有个人账号的，note 写用哪个公司官方号代替（公司号见 companies 的 x_account）
   - name: Sam Altman
     org: OpenAI
@@ -304,7 +304,7 @@ people:
     x_handle: null
     x_status: none
     x_verified_at: "2026-10-08"
-    note: 本人无 X 账号；@LiangWenfeng_ 为仿冒（parody）账号，官方只认 @deepseek_ai。依据：Reuters 事实核查 https://www.reuters.com/fact-check/fake-x-posts-deepseek-founder-stem-parody-account-2025-01-29/ ；SCMP https://www.scmp.com/tech/big-tech/article/3297829/deepseek-warns-fake-social-media-accounts-ai-apps-popularity-soars
+    note: 未找到可核实的本人 X 账号，改用公司官方号 @deepseek_ai。依据：Reuters 事实核查 https://www.reuters.com/fact-check/fake-x-posts-deepseek-founder-stem-parody-account-2025-01-29/ ；SCMP https://www.scmp.com/tech/big-tech/article/3297829/deepseek-warns-fake-social-media-accounts-ai-apps-popularity-soars
   - name: 杨植麟
     org: 月之暗面
     role: CEO
@@ -322,13 +322,13 @@ people:
     role: Founder
     x_handle: TBD
     x_status: unverified
-    note: 未发现本人账号（@yanjunjie、@junjieyan 均为无简介旧号，判断无关），用公司官方号 @MiniMax_AI 代替
+    note: 未找到可核实的本人账号，改用公司官方号 @MiniMax_AI
   - name: 姜大昕
     org: 阶跃星辰
     role: Founder
     x_handle: TBD
-    x_status: candidate
-    note: 候选 @DaxinJiang（未确认：无简介、无官方链接，帖子只转发 @StepFun_ai，官方号未 @ 过它）；暂用公司官方号 @StepFun_ai
+    x_status: unverified
+    note: 暂未找到可核实的本人账号，改用公司官方号 @StepFun_ai；待官方渠道确认后再补
   - name: 李开复
     org: 零一万物
     role: Founder
@@ -362,13 +362,13 @@ people:
     role: 通义负责人
     x_handle: TBD
     x_status: unverified
-    note: 未发现本人账号（@JingrenZhou 是无关垃圾号），用公司官方号 @Alibaba_Qwen 代替
+    note: 未找到可核实的本人账号，改用公司官方号 @Alibaba_Qwen
   - name: 朱文佳
     org: 字节跳动
     role: Seed 负责人
     x_handle: TBD
     x_status: unverified
-    note: 未发现可核实的本人账号（@ZHUWENJIA 受保护无法核实），用公司官方号 @ByteDanceSeed_ 代替
+    note: 未找到可核实的本人账号，改用公司官方号 @ByteDanceSeed_
 
 media:
   # 第三方科技媒体（T1/T2；传闻与转述只作线索，不作定论）
