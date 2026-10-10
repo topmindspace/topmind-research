@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.4 — 2026-10-10
+
+### 优化
+
+- 信源配置 `config/sources.yaml` 中人物信源的备注改为中性表述：未找到可核实的本人账号时，改用公司官方号；`scripts/check_sources.py` 的注释同步
+- `.gitignore` 补充 Release 附件、npm pack 输出等再生成产物
+- 技能内容与流程不变，版本号随包同步
+
 ## 0.2.3 — 2026-10-08
 
 ### 特性支持
