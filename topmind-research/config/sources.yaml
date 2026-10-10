@@ -77,7 +77,7 @@ companies:
     status: ok
     x_account: AIatMeta
     verified_at: "2026-10-08"
-    note: 无 RSS（/blog/rss/、/blog/feed/、/rss/ 均 400）。最新 2026-07-27；列表不严格按时间排序，须按日期重排。curl 只带 Chrome UA、不带 Sec-Fetch-* 头时返回 400，不带 UA 或带全套浏览器头时 200，请求头按 headers: browser
+    note: "无 RSS（/blog/rss/、/blog/feed/、/rss/ 均 400）。最新 2026-07-27；列表不严格按时间排序，须按日期重排。curl 只带 Chrome UA、不带 Sec-Fetch-* 头时返回 400，不带 UA 或带全套浏览器头时 200，请求头按 headers: browser"
   - name: Microsoft
     country: US
     blog: https://www.microsoft.com/en-us/research/blog/
