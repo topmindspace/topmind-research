@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Verge-like Atom</title>
+<entry><title>Everything announced at Microsoft&#8217;s event</title><link rel="alternate" href="https://example.net/a"/><updated>2026-10-07T18:15:00-04:00</updated><published>2026-10-07T14:42:00-04:00</published></entry>
+<entry><title>Later UTC post</title><link rel="alternate" href="https://example.net/b"/><published>2026-10-07T20:00:00+00:00</published></entry>
+</feed>

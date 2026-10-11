@@ -1,0 +1,152 @@
+name: Release
+
+# 打 v* tag 时：跑检查 → 建 GitHub Release（说明取 CHANGELOG 对应段，附技能 zip）→ 发 npm → 只保留最近 2 个 Release。
+# 与 topmind-skills / topmind-writing-skills / topmind-presentation / topmind-handoff 同一套流程。
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    env:
+      # 检查会运行 scripts/*.py；不写字节码缓存，打包与 npm 包保持干净
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      # npm 发布的是 package.json 的版本；tag 对不上就停，避免 tag 与 npm 永久错位。
+      # SKILL.md、技能 package.json、collect_feeds.py 与 CHANGELOG 的一致性由下一步 check_versions.py 检查。
+      - name: Verify tag matches package.json version
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          EXPECTED="v$(node -p "require('./package.json').version")"
+          if [[ "$TAG" != "$EXPECTED" ]]; then
+            echo "tag ↔ package.json version mismatch: tag=${TAG} but package.json version=${EXPECTED#v}" >&2
+            echo "Bump package.json version or re-tag before publishing." >&2
+            exit 1
+          fi
+          echo "tag matches package.json version: ${TAG}"
+
+      # 与 CI 同一入口；Release 里官方校验器必须跑，不允许跳过
+      - name: Repo checks (versions, refs, sources, privacy, citations, unit tests, agentskills validate)
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet skills-ref==0.1.1
+          AGENTSKILLS="$(command -v agentskills)" bash scripts/ci_checks.sh
+
+      - name: npm package content check
+        run: python3 scripts/check_npm_pack.py
+
+      - name: Release notes from CHANGELOG
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./package.json').version")"
+          mkdir -p release-assets
+          python3 scripts/changelog_section.py "$VERSION" > "$RUNNER_TEMP/release-notes.md"
+          cat "$RUNNER_TEMP/release-notes.md"
+
+      - name: Build release zip
+        run: |
+          set -euo pipefail
+          # zip 顶层就是技能目录 topmind-research/，解压到宿主技能目录即可用
+          zip -r release-assets/topmind-research.zip topmind-research \
+            -x '*/__pycache__/*' '*.pyc' '*/.*'
+          unzip -l release-assets/topmind-research.zip | tail -1
+          ls -la release-assets/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          body_path: ${{ runner.temp }}/release-notes.md
+          files: release-assets/*
+
+      # 发 npm（与 tag 同步）。需要仓库 secret NPM_TOKEN（npm granular token，对 @topmindspace 有写权限）。
+      # 没配 secret 直接失败：Release 建好却悄悄跳过 npm，会留下一个看似成功、实际不完整的发版。
+      - name: Publish to npm (idempotent)
+        run: |
+          set -euo pipefail
+          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "::error::NPM_TOKEN secret is not set — refusing to publish an npm-less release." >&2
+            exit 1
+          fi
+          VERSION="$(node -p "require('./package.json').version")"
+          PKG="$(node -p "require('./package.json').name")"
+          echo "Checking whether ${PKG}@${VERSION} is already on the registry..."
+          if npm view "${PKG}@${VERSION}" version >/dev/null 2>&1; then
+            echo "${PKG}@${VERSION} already on npm — skip publish (exit 0)."
+            exit 0
+          fi
+          echo "Publishing ${PKG}@${VERSION} ..."
+          set +e
+          PUBLISH_LOG="$(mktemp)"
+          npm publish --access public >"$PUBLISH_LOG" 2>&1
+          rc=$?
+          set -e
+          cat "$PUBLISH_LOG"
+          if [ "$rc" -eq 0 ]; then
+            echo "npm publish OK: ${PKG}@${VERSION}"
+            exit 0
+          fi
+          # 重跑时的 E409 通常说明上一次尝试已在服务端落地
+          if grep -Eqi 'E409|Cannot publish over previously published|previously staged|EPUBLISHCONFLICT|cannot publish over existing' "$PUBLISH_LOG"; then
+            echo "npm publish reported a conflict for ${PKG}@${VERSION}; re-checking registry..."
+            if npm view "${PKG}@${VERSION}" version >/dev/null 2>&1; then
+              echo "${PKG}@${VERSION} is on npm (published by an earlier attempt) — success."
+              exit 0
+            fi
+            echo "conflict reported but version NOT visible on npm — FAIL." >&2
+            echo "Bump package.json version and re-tag; do not reuse a tag across versions." >&2
+            exit 1
+          fi
+          if npm view "${PKG}@${VERSION}" version >/dev/null 2>&1; then
+            echo "${PKG}@${VERSION} now visible on npm after publish attempt — success."
+            exit 0
+          fi
+          echo "npm publish failed with exit ${rc} (not an already-published conflict)." >&2
+          exit "$rc"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # 只保留最近 2 个 GitHub Release（只走 API 删除 Release），git tag 全部保留。
+      # 不要运行 `git push origin :refs/tags/...`。旧 Release 页删除后，CHANGELOG.md 是完整历史。
+      - name: Prune old releases (keep 2; tags retained)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          KEEP=2
+          mapfile -t ids < <(gh api "repos/${GITHUB_REPOSITORY}/releases" --paginate --jq '.[] | "\(.published_at // .created_at)\t\(.id)\t\(.tag_name)"' | sort -r)
+          echo "found ${#ids[@]} release(s); keeping newest ${KEEP}; tags retained"
+          i=0
+          for row in "${ids[@]}"; do
+            i=$((i + 1))
+            if [ "$i" -le "$KEEP" ]; then
+              echo "keep  $row"
+              continue
+            fi
+            rest="${row#*$'\t'}"
+            id="${rest%%$'\t'*}"
+            tag="${rest#*$'\t'}"
+            echo "prune release id=${id} tag=${tag} (tag retained)"
+            gh api -X DELETE "repos/${GITHUB_REPOSITORY}/releases/${id}"
+          done

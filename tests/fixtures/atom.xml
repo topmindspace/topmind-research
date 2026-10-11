@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Example Atom</title>
+<entry><title>Paper B</title><link rel="alternate" href="https://example.org/papers/b"/><link rel="self" href="https://example.org/self/b"/><updated>2026-10-05T08:00:00Z</updated></entry>
+<entry><title>  Paper
+  C  </title><id>https://example.org/papers/c</id><published>2026-10-07T01:00:00+08:00</published></entry>
+</feed>
