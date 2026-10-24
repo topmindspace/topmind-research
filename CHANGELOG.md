@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.6 — 2026-10-24
+
+### 优化
+
+- README 中英文对齐：设计一节补齐信源可配置、核验门、按难度投入、出稿交接与可选后端，写明产出默认用中文。
+- CHANGELOG 里只涉及发布流程与 CI 的条目压成一行，技能内容不变。
+
 ## 0.2.5 — 2026-10-11
 
 ### 优化
@@ -12,26 +19,18 @@
 ### 优化
 
 - 信源配置 `config/sources.yaml` 中人物信源的备注改为中性表述：未找到可核实的本人账号时，改用公司官方号；`scripts/check_sources.py` 的注释同步
-- `.gitignore` 补充 Release 附件、npm pack 输出等再生成产物
 - 技能内容与流程不变，版本号随包同步
 
 ## 0.2.3 — 2026-10-08
 
 ### 特性支持
 
-**发布到 npm**
-
-- 新增 `.github/workflows/release.yml`，与 topmind-skills、topmind-writing-skills 等仓库同一套流程：打 `v*` tag 后先核对 tag 与 `package.json` 版本，跑全部检查（含官方校验器 `skills-ref==0.1.1`，Release 里不允许跳过），再建 GitHub Release（说明取 CHANGELOG 对应版本段，附 `topmind-research.zip`，zip 顶层就是技能目录），然后发 npm `@topmindspace/topmind-research`，最后只保留最近 2 个 Release，git tag 全部保留
-- 发 npm 需要仓库 secret `NPM_TOKEN`；没配时这一步直接失败并报错，不会悄悄跳过。重跑时已发布的版本按幂等处理
-- `package.json` 补齐发布字段：`publishConfig.access: public`、`author`、`bugs`、`keywords`；`files` 白名单不变，只发技能目录 `topmind-research/` 与根目录的 README、LICENSE、CHANGELOG
-- 新增 `scripts/check_npm_pack.py`：按 `npm pack --dry-run` 的实际清单检查，技能目录里 git 跟踪的文件必须全部进包，仓库根的 `tests/`、`evals/`、`scripts/`、`.github/` 与缓存不得进包；`ci_checks.sh` 在有 npm 时运行，CI 与 Release 都会跑
-- 新增 `scripts/changelog_section.py`：按版本号取 CHANGELOG 段落作为 Release 说明，找不到对应段落时 Release 失败；`tests/test_release_helpers.py` 覆盖段落提取与 `package.json` 发布字段
+- 发布到 npm：`@topmindspace/topmind-research`。每个版本同时附 GitHub Release 压缩包 `topmind-research.zip`，解压后顶层就是技能目录。
 
 ### 优化
 
-- README（中英）安装说明改为 npm、skills CLI、Release zip、git clone 四种装法；npm 只把包装进 `node_modules`，宿主找不到，装完要把 `topmind-research/` 复制进技能目录
-- GitHub Actions 改用 Node 24 运行时的版本：`actions/checkout` v4 → v7、`actions/setup-python` v5 → v7、`actions/upload-artifact` v4 → v7；CI 增加 `actions/setup-node` v7（Node 24）用于 npm 包内容检查
-- `runs-on` 由 `ubuntu-latest` 固定为 `ubuntu-24.04`：GitHub 在 2026-10-19 至 11-19 期间把 `ubuntu-latest` 逐步切到 Ubuntu 26.04，先停在当前已验证的镜像，切 26.04 另行验证后再改
+- README（中英）安装说明改为 npm、skills CLI、Release zip、git clone 四种装法。
+- 其余为发布流程与 CI 调整，技能内容不变。
 
 ## 0.2.2 — 2026-10-08
 

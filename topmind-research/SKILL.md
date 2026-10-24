@@ -16,10 +16,10 @@ compatibility: >-
   sequential work and marks pages it cannot load). Python 3.9+ only for the optional
   scripts. Writes reports into a topmind workspace when one is present.
 metadata:
-  version: "0.2.5"
+  version: "0.2.6"
   author: TopMindSpace
   homepage: https://github.com/topmindspace/topmind-research#readme
-  updated: "2026-10-11"
+  updated: "2026-10-24"
   action_category: research
   triggers: 大厂动态, AI 周报, 情报 sweep, 读论文, 论文精读, 技术报告解读, system card, 模型对比, 融资核实, 估值核实, topmind-research
 ---
