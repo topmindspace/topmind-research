@@ -11,7 +11,7 @@ Outputs are written in Chinese by default.
 
 ## Install
 
-The skill directory is `topmind-research/` and it is self-contained. The npm package [`@topmindspace/topmind-research`](https://www.npmjs.com/package/@topmindspace/topmind-research) is published from 0.2.3 on (0.2.2 and earlier have no npm package; use options 2–4). Pick one:
+The skill directory is `topmind-research/` and it is self-contained. The npm package is [`@topmindspace/topmind-research`](https://www.npmjs.com/package/@topmindspace/topmind-research). Pick one:
 
 **Option 1: npm, then copy into your skills folder**
 
@@ -78,7 +78,7 @@ tests/                       # unit tests
 - **Verification gate**: `references/verification.md` sets the bar per fact type (T0–T3 source tiers, vendor-claim labels), requires `[n]` citations on every factual sentence, and a citation-support check before delivery.
 - **Effort scaling**: analyze starts with a research brief, picks an effort tier (single fact / comparison / survey), caps parallel sub-agents at 6, runs at most two gap-filling rounds, and writes once after research is complete.
 - **No silent side effects**: the skill never writes memory, edits `sources.yaml`, or starts a deep dive on its own; it lists suggestions and waits for the user.
-- **Neighbouring skills**: community buzz goes to last30days, daily digests to TopStream每日精选, organising stored notes to topmind-organize, publishing is suggested in the receipt: short drafts to topmind-briefs, WeChat articles to topmind-wechat-post, everything else to topmind-write.
+- **Neighbouring skills**: community buzz goes to last30days, daily digests to TopStream每日精选, organising stored notes to topmind-organize, presentation decks to topmind-presentation; publishing is suggested in the receipt: short drafts to topmind-briefs, WeChat articles to topmind-wechat-post, everything else to topmind-write.
 - **Optional backend**: `references/backend-gemini.md` describes running Gemini Deep Research when the user explicitly asks for it.
 
 ## Versioning and checks

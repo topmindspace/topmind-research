@@ -7,9 +7,11 @@ AI 行业情报与研究技能（单技能，两种模式）。[English](README.
 | collect | 按 `config/sources.yaml` 扫中美 AI 公司官方公告、技术报告、论文与工具源，去重聚合成周报或快讯素材 |
 | analyze | 围绕一个明确问题精读论文、技术报告或做横向对比，产出带置信度与逐句来源的研究报告和已核验事实表 |
 
+产出默认用中文。
+
 ## 安装
 
-技能目录是 `topmind-research/`，目录内自包含，不依赖仓库根的其他文件。npm 包 [`@topmindspace/topmind-research`](https://www.npmjs.com/package/@topmindspace/topmind-research) 自 0.2.3 起发布（0.2.2 及更早没有 npm 包，用方式二到方式四）。四种装法任选：
+技能目录是 `topmind-research/`，目录内自包含，不依赖仓库根的其他文件。npm 包是 [`@topmindspace/topmind-research`](https://www.npmjs.com/package/@topmindspace/topmind-research)。四种装法任选：
 
 **方式一：npm 安装后复制进技能目录**
 
@@ -65,17 +67,20 @@ topmind-research/
 ├── assets/templates/        # 周报、研究报告、事实表、研究简报、状态文件模板
 ├── config/                  # sources.yaml（信源）、categories.yaml（分类）
 └── scripts/                 # 可选：信源抓取、排序、引用检查（仅 Python 标准库）
-evals/                       # 发版前跑的小评测集与评分标准
+evals/                       # 触发与产出评测用例和评分标准
 scripts/                     # 仓库 CI 检查
 tests/                       # 单元测试
 ```
 
 ## 设计
 
-- **配置化**：信源、分类在 `topmind-research/config/` 里改 YAML，不用改技能。每个信源带 `status`（ok / page-only / blocked / tbd）、`fetch`（http / browser / js / api / x）和 `verified_at`；中国厂商补了 Hugging Face 组织 API、GitHub 组织仓库等可机读发布信号。
-- **核验门**：`references/verification.md` 按事实类型定核验强度，逐句 `[n]` 引用，交付前做引用支撑检查。
-- **与 topmind 衔接**：报告落盘到专题（topmind-organize 约定），记忆只建议不自动写，出稿时在回执建议交给 topmind-briefs（短稿）、topmind-wechat-post（公众号）或 topmind-write，并附已核验事实表。
-- **与邻近技能分工**：社区口碑交给 last30days，每日聚合站精选交给 TopStream每日精选，已存笔记的整理交给 topmind-organize。
+- **信源可配置**：在 `topmind-research/config/` 里改 YAML，不用改技能。每个信源带 `status`（ok / page-only / blocked / tbd）、`fetch`（http / browser / js / api / x）、`verified_at`，以及可选的机读渠道（`rss`、`rss_extra`、`hf_api`、`gh_api`、`papers_api`、`list_api`）。
+- **核验门**：`references/verification.md` 按事实类型定核验强度（T0–T3 来源分级、厂商自报标「厂商口径」），每个事实句带 `[n]` 引用，交付前做引用支撑检查。
+- **按难度投入**：analyze 先写研究简报，再定档位（单点事实 / 对比 / 综述）；子 agent 最多并行 6 个，补缺最多两轮，研究做完再统一成文。
+- **不自作主张**：不自动写记忆、不改 `sources.yaml`、不自行开始深挖，只在回执里列建议，等你决定。
+- **与 topmind 衔接**：报告落盘到专题（topmind-organize 约定）；出稿在回执里建议交给 topmind-briefs（短稿）、topmind-wechat-post（公众号）或 topmind-write，并附已核验事实表。
+- **与邻近技能分工**：社区口碑交给 last30days，每日聚合站精选交给 TopStream每日精选，已存笔记的整理交给 topmind-organize，做成汇报材料交给 topmind-presentation。
+- **可选后端**：用户明确要求时，按 `references/backend-gemini.md` 调用 Gemini Deep Research。
 
 ## 版本与检查
 
